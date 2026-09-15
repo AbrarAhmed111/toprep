@@ -191,7 +191,7 @@ export function SectionBoard({
                       {isExpanded && (
                         <div className="border-t border-border/40 p-3 animate-in fade-in slide-in-from-top-4 duration-500">
                           {/* Glow effect on expansion */}
-                          <div className="absolute inset-0 rounded-lg bg-brand/5 animate-pulse" style={{ animationDuration: '3s' }} />
+                          <div className="absolute inset-0 rounded-lg bg-brand/5 " />
                           <div className="relative">
                             <TopicList
                               topics={groupTopics}

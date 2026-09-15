@@ -89,30 +89,20 @@ export function TopicList({
   return (
     <div className="space-y-2">
       <div ref={animationParent} className="space-y-2">
-        {topics.length === 0 ? (
-          <EmptyState
-            icon={<ListChecks size={32} />}
-            title="No topics yet"
-            description={
-              emptyMessage ??
-              'Add your first topic above, or paste a list to add many at once.'
-            }
-          />
-        ) : (
-          <>
-            {justReorganized && (
-              <style>{`
-                @keyframes shimmer {
-                  0% { transform: translateX(-100%); opacity: 0; }
-                  50% { opacity: 1; }
-                  100% { transform: translateX(100%); opacity: 0; }
-                }
-                .topic-shimmer {
-                  animation: shimmer 2s ease-in-out;
-                }
-              `}</style>
-            )}
-            {topics.map((topic, index) => (
+        <>
+          {justReorganized && (
+            <style>{`
+              @keyframes shimmer {
+                0% { transform: translateX(-100%); opacity: 0; }
+                50% { opacity: 1; }
+                100% { transform: translateX(100%); opacity: 0; }
+              }
+              .topic-shimmer {
+                animation: shimmer 2s ease-in-out;
+              }
+            `}</style>
+          )}
+          {topics.map((topic, index) => (
               <div key={topic.id}>
                 {justReorganized ? (
                   <div
@@ -154,8 +144,7 @@ export function TopicList({
                 )}
               </div>
             ))}
-          </>
-        )}
+        </>
       </div>
     </div>
   )
