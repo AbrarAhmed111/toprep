@@ -16,7 +16,7 @@ const GPTLogo = () => (
   <img
     src="https://static.vecteezy.com/system/resources/previews/021/059/825/non_2x/chatgpt-logo-chat-gpt-icon-on-green-background-free-vector.jpg"
     alt="GPT"
-    className="w-8 h-8 object-contain"
+    className="w-8 rounded-md h-8 object-contain"
   />
 )
 
@@ -30,7 +30,7 @@ const GeminiLogo = () => (
 
 const YouTubeLogo = () => (
   <img
-    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqKweOmL0sCXzCDo4pd2RgiRUvniaVvfMIwt1t4RHtKA&s=10"
+    src="https://img.magnific.com/premium-vector/youtube-app-round-icon-social-media-logo-vector-illustration_277909-797.jpg?semt=ais_hybrid&w=740&q=80"
     alt="YouTube"
     className="w-8 h-8 object-contain"
   />
@@ -151,9 +151,9 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 group-hover:to-white/[0.02] transition-all duration-300 pointer-events-none" />
 
                   {/* Content */}
-                  <div className="relative z-10 flex flex-col h-full">
-                    {/* Icon Container */}
-                    <div className={`inline-flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br ${feature.gradient} border border-white/10 ${feature.iconColor} mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className="relative z-10 flex flex-col h-full items-center">
+                    {/* Icon Container - Centered */}
+                    <div className={`flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br ${feature.gradient} border border-white/10 ${feature.iconColor} mb-6 group-hover:scale-110 transition-transform duration-300`}>
                       {isVideoLearning ? (
                         <YouTubeLogo />
                       ) : (
@@ -161,21 +161,15 @@ export default function Home() {
                       )}
                     </div>
 
-                    {/* Title */}
-                    <h3 className="text-xl font-semibold text-white mb-3 leading-tight">
+                    {/* Title - Centered */}
+                    <h3 className="text-xl font-semibold text-white mb-3 leading-tight text-center">
                       {feature.title}
                     </h3>
 
-                    {/* Description - Full text without truncation */}
-                    <p className="text-sm text-gray-400 leading-relaxed flex-grow mb-4">
+                    {/* Description - Full text without truncation, Centered */}
+                    <p className="text-sm text-gray-400 leading-relaxed text-center">
                       {feature.description}
                     </p>
-
-                    {/* Learn More Link */}
-                    <div className="inline-flex items-center gap-2 text-sm font-medium text-brand group-hover:text-brand/80 transition-colors">
-                      <span>Learn more</span>
-                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
-                    </div>
                   </div>
                 </div>
               )
