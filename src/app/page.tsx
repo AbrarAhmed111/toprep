@@ -118,32 +118,44 @@ export default function Home() {
           </Button>
         </Link>
 
-        {/* Main Features Grid - 5 columns */}
-        <div className="w-full mt-16">
-          <h2 className="mb-8 text-2xl font-bold text-foreground text-center">
+        {/* Main Features Grid - 5 columns with improved card design */}
+        <div className="w-full mt-20">
+          <h2 className="mb-12 text-3xl font-bold text-foreground text-center">
             Everything You Need to Succeed
           </h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
             {features.map(feature => {
               const isVideoLearning = feature.title === 'Video Learning'
               return (
                 <Card
                   key={feature.title}
-                  className="p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:border-brand/50 flex flex-col items-center text-center min-h-72"
+                  className="p-8 transition-all duration-300 hover:-translate-y-3 hover:shadow-xl hover:border-brand/60 flex flex-col items-center text-center min-h-80 border-2 group"
                 >
-                  <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-2 border-2 border-border/50 ${feature.color} transition-all duration-300`}>
+                  {/* Icon/Logo Container */}
+                  <div className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${feature.color === 'text-brand' ? 'from-brand/20 to-brand/10' : 'from-surface-2 to-surface'} border-3 border-${feature.color === 'text-brand' ? 'brand/30' : 'border/50'} ${feature.color} transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
                     {isVideoLearning ? (
                       <YouTubeLogo />
                     ) : (
-                      <feature.icon size={28} strokeWidth={1.5} />
+                      <feature.icon size={32} strokeWidth={1.3} />
                     )}
                   </div>
-                  <h3 className="mt-5 text-base font-bold text-foreground leading-tight">
+
+                  {/* Title */}
+                  <h3 className="mt-6 text-lg font-bold text-foreground leading-tight">
                     {feature.title}
                   </h3>
-                  <p className="mt-4 text-sm leading-relaxed text-muted line-clamp-4">
+
+                  {/* Description */}
+                  <p className="mt-4 text-sm leading-relaxed text-muted line-clamp-5 flex-grow">
                     {feature.description}
                   </p>
+
+                  {/* Learn More Link */}
+                  <div className="mt-auto pt-4">
+                    <div className="inline-flex items-center gap-1 text-xs font-semibold text-brand opacity-0 group-hover:opacity-100 transition-opacity">
+                      Learn more <span>→</span>
+                    </div>
+                  </div>
                 </Card>
               )
             })}
