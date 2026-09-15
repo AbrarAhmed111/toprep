@@ -46,30 +46,48 @@ const features = [
 const aiProviders = [
   {
     name: 'Google Gemini',
-    logo: '🔷',
-    color: 'from-blue-500 to-blue-600',
-    bgColor: 'bg-blue-500/20',
+    color: 'text-blue-400',
+    logoSvg: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+        <circle cx="6" cy="6" r="2" fill="#4285F4" />
+        <circle cx="12" cy="6" r="2" fill="#DB4437" />
+        <circle cx="18" cy="6" r="2" fill="#F4B400" />
+        <circle cx="6" cy="12" r="2" fill="#0F9D58" />
+        <circle cx="12" cy="12" r="2" fill="#AB47BC" />
+        <circle cx="18" cy="12" r="2" fill="#00BCD4" />
+      </svg>
+    ),
     delay: '0s'
   },
   {
     name: 'OpenAI GPT',
-    logo: '🤖',
-    color: 'from-emerald-500 to-emerald-600',
-    bgColor: 'bg-emerald-500/20',
+    color: 'text-white',
+    logoSvg: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+        <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fontSize="12" fontWeight="bold" fill="white">G</text>
+      </svg>
+    ),
     delay: '0.1s'
   },
   {
     name: 'Anthropic Claude',
-    logo: '✨',
-    color: 'from-purple-500 to-purple-600',
-    bgColor: 'bg-purple-500/20',
+    color: 'text-purple-400',
+    logoSvg: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#E879F9" />
+      </svg>
+    ),
     delay: '0.2s'
   },
   {
     name: 'Groq',
-    logo: '⚡',
-    color: 'from-orange-500 to-orange-600',
-    bgColor: 'bg-orange-500/20',
+    color: 'text-orange-400',
+    logoSvg: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11z" fill="#FF9900" />
+      </svg>
+    ),
     delay: '0.3s'
   },
 ]
@@ -113,7 +131,7 @@ export default function Home() {
         </Link>
 
         {/* AI Providers */}
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <style>{`
             @keyframes slide-in-provider {
               from {
@@ -133,14 +151,14 @@ export default function Home() {
           {aiProviders.map(provider => (
             <div
               key={provider.name}
-              className="provider-badge inline-flex items-center gap-1.5 rounded-full border border-slate-600/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur transition-all duration-300 hover:scale-105 hover:border-slate-500"
+              className="provider-badge inline-flex items-center gap-2 rounded-full border border-slate-600/50 px-3 py-2 text-xs font-medium text-slate-200 backdrop-blur transition-all duration-300 hover:scale-105 hover:border-slate-500"
               style={{
                 background: `linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%)`,
                 animationDelay: provider.delay,
               }}
             >
-              <span className={`text-base font-bold bg-gradient-to-r ${provider.color} bg-clip-text text-transparent`}>
-                {provider.logo}
+              <span className={`${provider.color} flex-shrink-0`}>
+                {provider.logoSvg}
               </span>
               <span>{provider.name}</span>
             </div>
