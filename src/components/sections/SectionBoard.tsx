@@ -186,21 +186,25 @@ export function SectionBoard({
                       </div>
 
                       {isExpanded && (
-                        <div className="border-t border-border/40 p-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                          <TopicList
-                            topics={groupTopics}
-                            sections={sections}
-                            selectedTopicIds={selectedTopicIds}
-                            preparation={preparation}
-                            emptyMessage="Drag topics here, or move one in using its Section dropdown."
-                            onToggleSelect={onToggleSelectTopic}
-                            onRename={onRenameTopic}
-                            onStatusChange={onStatusChangeTopic}
-                            onMoveToSection={onMoveTopicToSection}
-                            onDelete={onDeleteTopic}
-                            onUpdateTopic={onUpdateTopic}
-                            onReorder={onReorderTopicsInGroup}
-                          />
+                        <div className="border-t border-border/40 p-3 animate-in fade-in slide-in-from-top-4 duration-500">
+                          {/* Glow effect on expansion */}
+                          <div className="absolute inset-0 rounded-lg bg-brand/5 animate-pulse" style={{ animationDuration: '3s' }} />
+                          <div className="relative">
+                            <TopicList
+                              topics={groupTopics}
+                              sections={sections}
+                              selectedTopicIds={selectedTopicIds}
+                              preparation={preparation}
+                              emptyMessage="Drag topics here, or move one in using its Section dropdown."
+                              onToggleSelect={onToggleSelectTopic}
+                              onRename={onRenameTopic}
+                              onStatusChange={onStatusChangeTopic}
+                              onMoveToSection={onMoveTopicToSection}
+                              onDelete={onDeleteTopic}
+                              onUpdateTopic={onUpdateTopic}
+                              onReorder={onReorderTopicsInGroup}
+                            />
+                          </div>
                         </div>
                       )}
                     </Card>
