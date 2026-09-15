@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { BookOpen, Sparkles, Youtube, FileText, FolderKanban, HelpCircle, ArrowRight } from 'lucide-react'
+import { IoIosLock } from 'react-icons/io'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 
@@ -81,7 +82,7 @@ const aiProviders = [
     description: 'Advanced reasoning and multi-turn conversations',
   },
   {
-    name: 'GPT',
+    name: 'ChatGPT',
     logo: GPTLogo,
     description: 'State-of-the-art language understanding',
   },
@@ -179,9 +180,16 @@ export default function Home() {
 
         {/* Powered By AI Section */}
         <div className="w-full mt-20 pt-12 border-t border-white/10">
-          <h2 className="mb-3 text-2xl font-bold text-foreground text-center">
-            ⚡ Powered by Industry-Leading AI
-          </h2>
+        <div className="flex flex-col items-center gap-4 mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+              <Sparkles size={16} className="text-brand" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-brand">Features</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold text-center text-foreground max-w-3xl">
+               Powered by Industry-Leading AI
+            </h2>
+          </div>
+
           <p className="mb-12 text-sm text-muted text-center max-w-2xl mx-auto">
             We integrate multiple advanced LLM providers to give you the best learning experience and multiple ways to understand complex topics
           </p>
@@ -211,33 +219,16 @@ export default function Home() {
           </div>
 
           <div className="mt-10 p-4 rounded-lg border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl">
-            <p className="text-xs text-muted text-center">
-              🔐 <span className="font-medium text-foreground">Your data is secure.</span> We use official APIs from each provider with enterprise-grade encryption and never store your study materials.
-            </p>
+            <div className="flex items-center justify-center gap-2 text-xs text-muted text-center">
+              <IoIosLock className="text-brand flex-shrink-0" size={16} />
+              <p>
+                <span className="font-medium text-foreground">Your data is secure.</span> We use official APIs from each provider with enterprise-grade encryption and never store your study materials.
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Feature Highlights */}
-        <div className="w-full mt-16 grid grid-cols-1 gap-5 sm:grid-cols-3">
-          <Card className="p-6 border-l-4 border-l-blue-500 hover:-translate-y-1 hover:shadow-lg">
-            <h3 className="text-sm font-bold text-foreground mb-3">📄 Smart Extraction</h3>
-            <p className="text-sm text-muted leading-relaxed">
-              Upload PDFs and AI automatically extracts and organizes topics in optimal learning order
-            </p>
-          </Card>
-          <Card className="p-6 border-l-4 border-l-danger hover:-translate-y-1 hover:shadow-lg">
-            <h3 className="text-sm font-bold text-foreground mb-3">▶️ Video Integration</h3>
-            <p className="text-sm text-muted leading-relaxed">
-              Search YouTube directly from topics and build curated playlists of quality content
-            </p>
-          </Card>
-          <Card className="p-6 border-l-4 border-l-success hover:-translate-y-1 hover:shadow-lg">
-            <h3 className="text-sm font-bold text-foreground mb-3">🧠 AI Assistance</h3>
-            <p className="text-sm text-muted leading-relaxed">
-              Get personalized explanations, practice questions, and learning recommendations
-            </p>
-          </Card>
-        </div>
+      
       </div>
 
     </main>
