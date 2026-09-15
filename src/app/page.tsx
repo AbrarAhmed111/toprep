@@ -44,10 +44,34 @@ const features = [
 ]
 
 const aiProviders = [
-  { name: 'Google Gemini', icon: '🟦' },
-  { name: 'OpenAI GPT', icon: '⚪' },
-  { name: 'Anthropic Claude', icon: '🟥' },
-  { name: 'Groq', icon: '🚀' },
+  {
+    name: 'Google Gemini',
+    logo: '🔷',
+    color: 'from-blue-500 to-blue-600',
+    bgColor: 'bg-blue-500/20',
+    delay: '0s'
+  },
+  {
+    name: 'OpenAI GPT',
+    logo: '🤖',
+    color: 'from-emerald-500 to-emerald-600',
+    bgColor: 'bg-emerald-500/20',
+    delay: '0.1s'
+  },
+  {
+    name: 'Anthropic Claude',
+    logo: '✨',
+    color: 'from-purple-500 to-purple-600',
+    bgColor: 'bg-purple-500/20',
+    delay: '0.2s'
+  },
+  {
+    name: 'Groq',
+    logo: '⚡',
+    color: 'from-orange-500 to-orange-600',
+    bgColor: 'bg-orange-500/20',
+    delay: '0.3s'
+  },
 ]
 
 export default function Home() {
@@ -90,15 +114,36 @@ export default function Home() {
 
         {/* AI Providers */}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <span className="text-sm font-medium text-slate-400">Powered by:</span>
+          <style>{`
+            @keyframes slide-in-provider {
+              from {
+                opacity: 0;
+                transform: translateX(-20px);
+              }
+              to {
+                opacity: 1;
+                transform: translateX(0);
+              }
+            }
+            .provider-badge {
+              animation: slide-in-provider 0.6s ease-out forwards;
+            }
+          `}</style>
+          <span className="text-sm font-medium text-slate-300">Powered by:</span>
           {aiProviders.map(provider => (
-            <span
+            <div
               key={provider.name}
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-800/50 px-3 py-1.5 text-xs font-medium text-slate-300 backdrop-blur"
+              className="provider-badge inline-flex items-center gap-1.5 rounded-full border border-slate-600/50 px-3 py-1.5 text-xs font-medium text-slate-200 backdrop-blur transition-all duration-300 hover:scale-105 hover:border-slate-500"
+              style={{
+                background: `linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%)`,
+                animationDelay: provider.delay,
+              }}
             >
-              <span className="text-lg">{provider.icon}</span>
-              {provider.name}
-            </span>
+              <span className={`text-base font-bold bg-gradient-to-r ${provider.color} bg-clip-text text-transparent`}>
+                {provider.logo}
+              </span>
+              <span>{provider.name}</span>
+            </div>
           ))}
         </div>
       </div>
