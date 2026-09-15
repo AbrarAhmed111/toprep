@@ -172,7 +172,7 @@ export function TopicYouTubeSearchRedesigned({
               </div>
               <button
                 onClick={() => setShowFilters(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 transition-colors shrink-0 ml-4"
+                className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-brand-foreground hover:bg-brand-hover transition-colors shrink-0 ml-4"
               >
                 <YouTubeIcon />
                 Find
@@ -190,7 +190,7 @@ export function TopicYouTubeSearchRedesigned({
                 <button
                   onClick={performSearch}
                   disabled={isSearching}
-                  className="flex-1 rounded-lg bg-brand px-4 py-2 font-medium text-white hover:bg-brand-600 disabled:bg-brand-400 disabled:cursor-not-allowed transition-colors inline-flex items-center justify-center gap-2"
+                  className="flex-1 rounded-lg bg-brand px-4 py-2 font-medium text-brand-foreground hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors inline-flex items-center justify-center gap-2"
                 >
                   {isSearching ? (
                     <>
@@ -227,7 +227,7 @@ export function TopicYouTubeSearchRedesigned({
           {/* Video Card */}
           <div className="space-y-4 rounded-xl border border-border/50 bg-gradient-to-b from-surface to-surface-2/50 p-4 sm:p-5">
             {/* YouTube Player */}
-            <div className="aspect-video w-full overflow-hidden rounded-lg bg-black">
+            <div className="aspect-video w-full overflow-hidden rounded-lg bg-foreground">
               <iframe
                 width="100%"
                 height="100%"
@@ -284,7 +284,7 @@ export function TopicYouTubeSearchRedesigned({
               <button
                 onClick={handleNext}
                 disabled={isSearching}
-                className="flex-1 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 disabled:bg-brand-400 disabled:cursor-not-allowed transition-colors inline-flex items-center justify-center gap-2"
+                className="flex-1 rounded-lg bg-brand px-4 py-2 text-sm font-medium text-brand-foreground hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors inline-flex items-center justify-center gap-2"
               >
                 {isSearching ? (
                   <>

@@ -26,7 +26,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="animate-fade-in absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="animate-fade-in absolute inset-0 bg-foreground/10 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
