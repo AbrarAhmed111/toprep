@@ -57,7 +57,8 @@ export function AiOrganizeButton({
         sections: sections.map(s => ({ id: s.id, name: s.name })),
       })
 
-      // Apply immediately — the reorder/regroup animates into place
+      // Wait for magic animation to complete, then apply reorganization
+      await new Promise(resolve => setTimeout(resolve, 2000))
       onApply(data)
 
       // Count new sections created
@@ -72,15 +73,8 @@ export function AiOrganizeButton({
         name => !existingSectionNames.has(name.toLowerCase())
       )
 
-      // Show magic success toast with details
-      if (actuallyNewSections.length > 0) {
-        toast.success(
-          `✨ Topics organized into ${newSectionNames.size} section${newSectionNames.size === 1 ? '' : 's'}!`,
-          { duration: 3000 }
-        )
-      } else {
-        toast.success('✨ Topics reorganized with AI magic!', { duration: 3000 })
-      }
+      // Show success toast
+      toast.success('✨ Reorganized!', { duration: 2000 })
     } catch (err) {
       const message =
         err instanceof BackendApiError
