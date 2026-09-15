@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import {
   DndContext,
@@ -61,6 +62,19 @@ export function SectionBoard({
   onReorderSections,
 }: SectionBoardProps) {
   const [pendingDelete, setPendingDelete] = useState<Section | null>(null)
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(
+    new Set(sections.map(s => s.id))
+  )
+
+  const toggleSectionExpand = (sectionId: string) => {
+    const newExpanded = new Set(expandedSections)
+    if (newExpanded.has(sectionId)) {
+      newExpanded.delete(sectionId)
+    } else {
+      newExpanded.add(sectionId)
+    }
+    setExpandedSections(newExpanded)
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -136,38 +150,59 @@ export function SectionBoard({
                   const groupTopics = topicsBySection(section.id)
                   const { allSelected, someSelected } =
                     selectionState(groupTopics)
+                  const isExpanded = expandedSections.has(section.id)
+
                   return (
                     <Card key={section.id} className="overflow-hidden">
-                      <SectionHeader
-                        section={section}
-                        topicCount={groupTopics.length}
-                        allSelected={allSelected}
-                        someSelected={someSelected}
-                        onToggleSelectAll={() =>
-                          onSelectManyTopics(
-                            groupTopics.map(t => t.id),
-                            !allSelected,
-                          )
-                        }
-                        onRename={name => onRenameSection(section.id, name)}
-                        onDelete={() => setPendingDelete(section)}
-                      />
-                      <div className="p-3">
-                        <TopicList
-                          topics={groupTopics}
-                          sections={sections}
-                          selectedTopicIds={selectedTopicIds}
-                          preparation={preparation}
-                          emptyMessage="Drag topics here, or move one in using its Section dropdown."
-                          onToggleSelect={onToggleSelectTopic}
-                          onRename={onRenameTopic}
-                          onStatusChange={onStatusChangeTopic}
-                          onMoveToSection={onMoveTopicToSection}
-                          onDelete={onDeleteTopic}
-                          onUpdateTopic={onUpdateTopic}
-                          onReorder={onReorderTopicsInGroup}
-                        />
+                      <div className="flex items-center">
+                        <button
+                          onClick={() => toggleSectionExpand(section.id)}
+                          className="shrink-0 p-3 text-muted hover:text-foreground transition-colors"
+                          title={isExpanded ? 'Collapse section' : 'Expand section'}
+                        >
+                          <ChevronDown
+                            size={20}
+                            className={`transition-transform duration-300 ${
+                              isExpanded ? '' : '-rotate-90'
+                            }`}
+                          />
+                        </button>
+                        <div className="flex-1">
+                          <SectionHeader
+                            section={section}
+                            topicCount={groupTopics.length}
+                            allSelected={allSelected}
+                            someSelected={someSelected}
+                            onToggleSelectAll={() =>
+                              onSelectManyTopics(
+                                groupTopics.map(t => t.id),
+                                !allSelected,
+                              )
+                            }
+                            onRename={name => onRenameSection(section.id, name)}
+                            onDelete={() => setPendingDelete(section)}
+                          />
+                        </div>
                       </div>
+
+                      {isExpanded && (
+                        <div className="border-t border-border/40 p-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <TopicList
+                            topics={groupTopics}
+                            sections={sections}
+                            selectedTopicIds={selectedTopicIds}
+                            preparation={preparation}
+                            emptyMessage="Drag topics here, or move one in using its Section dropdown."
+                            onToggleSelect={onToggleSelectTopic}
+                            onRename={onRenameTopic}
+                            onStatusChange={onStatusChangeTopic}
+                            onMoveToSection={onMoveTopicToSection}
+                            onDelete={onDeleteTopic}
+                            onUpdateTopic={onUpdateTopic}
+                            onReorder={onReorderTopicsInGroup}
+                          />
+                        </div>
+                      )}
                     </Card>
                   )
                 })}
