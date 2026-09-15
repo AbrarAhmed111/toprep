@@ -29,6 +29,7 @@ interface SectionBoardProps {
   topics: Topic[]
   selectedTopicIds: string[]
   preparation?: Preparation
+  justReorganized?: boolean
   onToggleSelectTopic: (id: string) => void
   onSelectManyTopics: (ids: string[], select: boolean) => void
   onRenameTopic: (id: string, name: string) => void
@@ -48,6 +49,7 @@ export function SectionBoard({
   topics,
   selectedTopicIds,
   preparation,
+  justReorganized,
   onToggleSelectTopic,
   onSelectManyTopics,
   onRenameTopic,
@@ -123,6 +125,7 @@ export function SectionBoard({
           sections={sections}
           selectedTopicIds={selectedTopicIds}
           preparation={preparation}
+          justReorganized={justReorganized}
           onToggleSelect={onToggleSelectTopic}
           onRename={onRenameTopic}
           onStatusChange={onStatusChangeTopic}
@@ -195,6 +198,7 @@ export function SectionBoard({
                               sections={sections}
                               selectedTopicIds={selectedTopicIds}
                               preparation={preparation}
+                              justReorganized={justReorganized}
                               emptyMessage="Drag topics here, or move one in using its Section dropdown."
                               onToggleSelect={onToggleSelectTopic}
                               onRename={onRenameTopic}
@@ -223,6 +227,7 @@ export function SectionBoard({
               sections={sections}
               selectedTopicIds={selectedTopicIds}
               preparation={preparation}
+              justReorganized={justReorganized}
               emptyMessage="Every topic has a section."
               onToggleSelect={onToggleSelectTopic}
               onRename={onRenameTopic}

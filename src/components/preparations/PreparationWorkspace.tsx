@@ -58,6 +58,7 @@ export function PreparationWorkspace({
     state => state.selection.selectedTopicIds,
   )
   const [editOpen, setEditOpen] = useState(false)
+  const [justReorganized, setJustReorganized] = useState(false)
 
   const topics = useMemo(
     () =>
@@ -202,6 +203,10 @@ export function PreparationWorkspace({
   // the new order — all in one synchronous pass so React batches it into a
   // single re-render and the whole board reflows in one animation.
   const applyAiOrganization = (result: TopicOrganizeResult) => {
+    // Mark that reorganization just happened for animations
+    setJustReorganized(true)
+    // Clear the flag after animations complete (3 seconds to cover all animations)
+    setTimeout(() => setJustReorganized(false), 3000)
     const now = new Date().toISOString()
     const sectionIdByName = new Map(
       sections.map(s => [s.name.toLowerCase(), s.id]),
@@ -467,6 +472,7 @@ export function PreparationWorkspace({
         topics={topics}
         selectedTopicIds={validSelectedTopicIds}
         preparation={preparation}
+        justReorganized={justReorganized}
         onToggleSelectTopic={toggleSelectTopic}
         onSelectManyTopics={selectManyTopics}
         onRenameTopic={(id, name) => updateTopic(id, { name })}

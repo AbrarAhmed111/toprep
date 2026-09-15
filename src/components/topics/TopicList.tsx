@@ -46,6 +46,7 @@ interface TopicListProps {
   selectedTopicIds: string[]
   emptyMessage?: string
   preparation?: Preparation
+  justReorganized?: boolean
   onToggleSelect: (id: string) => void
   onRename: (id: string, name: string) => void
   onStatusChange: (id: string, status: TopicStatus) => void
@@ -61,6 +62,7 @@ export function TopicList({
   selectedTopicIds,
   emptyMessage,
   preparation,
+  justReorganized,
   onToggleSelect,
   onRename,
   onStatusChange,
@@ -122,19 +124,21 @@ export function TopicList({
             {topics.map((topic, index) => (
               <div
                 key={topic.id}
-                className="relative animate-in fade-in slide-in-from-left-4 duration-500"
-                style={{
+                className={justReorganized ? "relative animate-in fade-in slide-in-from-left-4 duration-500" : "relative"}
+                style={justReorganized ? {
                   animationDelay: `${index * 75}ms`,
-                }}
+                } : {}}
               >
-                {/* Shimmer overlay effect */}
-                <div
-                  className="absolute inset-0 rounded-2xl pointer-events-none topic-shimmer"
-                  style={{
-                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-                    animationDelay: `${index * 75 + 100}ms`,
-                  }}
-                />
+                {/* Shimmer overlay effect - only on reorganization */}
+                {justReorganized && (
+                  <div
+                    className="absolute inset-0 rounded-2xl pointer-events-none topic-shimmer"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                      animationDelay: `${index * 75 + 100}ms`,
+                    }}
+                  />
+                )}
                 <TopicContainer
                   topic={topic}
                   isSelected={selectedTopicIds.includes(topic.id)}
