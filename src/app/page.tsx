@@ -178,7 +178,7 @@ export default function Home() {
         </div>
 
         {/* Powered By AI Section */}
-        <div className="w-full mt-20 pt-12 border-t border-border/50">
+        <div className="w-full mt-20 pt-12 border-t border-white/10">
           <h2 className="mb-3 text-2xl font-bold text-foreground text-center">
             ⚡ Powered by Industry-Leading AI
           </h2>
@@ -192,7 +192,7 @@ export default function Home() {
               return (
                 <Card
                   key={provider.name}
-                  className="flex flex-col items-center justify-center gap-4 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-brand/50"
+                  className="flex flex-col items-center justify-center gap-4 p-6 hover:-translate-y-1 hover:shadow-lg"
                 >
                   <div className="text-orange-500 dark:text-orange-400">
                     <LogoComponent />
@@ -210,7 +210,7 @@ export default function Home() {
             })}
           </div>
 
-          <div className="mt-10 p-4 rounded-lg bg-surface/50 border border-border/50">
+          <div className="mt-10 p-4 rounded-lg border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl">
             <p className="text-xs text-muted text-center">
               🔐 <span className="font-medium text-foreground">Your data is secure.</span> We use official APIs from each provider with enterprise-grade encryption and never store your study materials.
             </p>
@@ -219,19 +219,19 @@ export default function Home() {
 
         {/* Feature Highlights */}
         <div className="w-full mt-16 grid grid-cols-1 gap-5 sm:grid-cols-3">
-          <Card className="p-6 border-l-4 border-l-blue-500 hover:shadow-md transition-all">
+          <Card className="p-6 border-l-4 border-l-blue-500 hover:-translate-y-1 hover:shadow-lg">
             <h3 className="text-sm font-bold text-foreground mb-3">📄 Smart Extraction</h3>
             <p className="text-sm text-muted leading-relaxed">
               Upload PDFs and AI automatically extracts and organizes topics in optimal learning order
             </p>
           </Card>
-          <Card className="p-6 border-l-4 border-l-danger hover:shadow-md transition-all">
+          <Card className="p-6 border-l-4 border-l-danger hover:-translate-y-1 hover:shadow-lg">
             <h3 className="text-sm font-bold text-foreground mb-3">▶️ Video Integration</h3>
             <p className="text-sm text-muted leading-relaxed">
               Search YouTube directly from topics and build curated playlists of quality content
             </p>
           </Card>
-          <Card className="p-6 border-l-4 border-l-success hover:shadow-md transition-all">
+          <Card className="p-6 border-l-4 border-l-success hover:-translate-y-1 hover:shadow-lg">
             <h3 className="text-sm font-bold text-foreground mb-3">🧠 AI Assistance</h3>
             <p className="text-sm text-muted leading-relaxed">
               Get personalized explanations, practice questions, and learning recommendations
