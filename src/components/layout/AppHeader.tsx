@@ -4,7 +4,7 @@ import { ThemeToggle } from '@/components/theme/ThemeToggle'
 
 export function AppHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-surface/85 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-brand-foreground shadow-sm">
