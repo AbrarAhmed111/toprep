@@ -88,11 +88,6 @@ const aiProviders = [
     logo: GeminiLogo,
     description: 'Multimodal AI with advanced analysis',
   },
-  {
-    name: 'YouTube',
-    logo: YouTubeLogo,
-    description: 'Video learning and content discovery',
-  },
 ]
 
 
@@ -160,7 +155,7 @@ export default function Home() {
             We integrate multiple advanced LLM providers to give you the best learning experience and multiple ways to understand complex topics
           </p>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 max-w-3xl mx-auto">
             {aiProviders.map(provider => {
               const LogoComponent = provider.logo
               return (
