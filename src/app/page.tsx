@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen, Sparkles, Youtube, FileText, Brain, Lightbulb } from 'lucide-react'
+import { BookOpen, Sparkles, Youtube, FileText, FolderKanban, HelpCircle, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 
@@ -40,32 +40,37 @@ const features = [
   {
     icon: FileText,
     title: 'Upload & Extract',
-    description: 'Upload PDFs and let AI automatically extract and organize topics in the correct order.',
-    color: 'text-blue-500',
+    description: 'Upload PDFs and let AI automatically extract, structure, and organize key topics for fast revision.',
+    gradient: 'from-blue-500/20 to-blue-600/10',
+    iconColor: 'text-blue-400',
   },
   {
-    icon: BookOpen,
+    icon: FolderKanban,
     title: 'Organize Topics',
-    description: 'Structure your preparation with organized sections. AI helps prioritize what matters most.',
-    color: 'text-brand',
+    description: 'Structure your preparation into clean, prioritized sections with intelligent AI suggestions.',
+    gradient: 'from-purple-500/20 to-purple-600/10',
+    iconColor: 'text-purple-400',
   },
   {
     icon: Youtube,
     title: 'Video Learning',
-    description: 'Search and watch YouTube videos directly for each topic. Keep only the best learning materials.',
-    color: 'text-danger',
+    description: 'Search and stream relevant YouTube educational videos directly alongside your study notes.',
+    gradient: 'from-red-500/20 to-red-600/10',
+    iconColor: 'text-red-400',
   },
   {
-    icon: Brain,
+    icon: Sparkles,
     title: 'AI Explanations',
-    description: 'Get concise AI-powered explanations for complex topics from multiple LLM providers.',
-    color: 'text-success',
+    description: 'Get instant, simplified breakdowns and visual explanations for complex concepts from Claude, GPT, and Gemini.',
+    gradient: 'from-yellow-500/20 to-yellow-600/10',
+    iconColor: 'text-yellow-400',
   },
   {
-    icon: Lightbulb,
+    icon: HelpCircle,
     title: 'Practice Questions',
-    description: 'AI generates expected interview and exam questions to test your knowledge.',
-    color: 'text-warning',
+    description: 'Auto-generate tailored exam and interview questions with real-time feedback and detailed solutions.',
+    gradient: 'from-green-500/20 to-green-600/10',
+    iconColor: 'text-green-400',
   },
 ]
 
@@ -118,45 +123,61 @@ export default function Home() {
           </Button>
         </Link>
 
-        {/* Main Features Grid - 5 columns with improved card design */}
-        <div className="w-full mt-20">
-          <h2 className="mb-12 text-3xl font-bold text-foreground text-center">
-            Everything You Need to Succeed
-          </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        {/* Modern Features Section - Glassmorphic Design */}
+        <div className="w-full mt-24">
+          {/* Header with Badge */}
+          <div className="flex flex-col items-center gap-4 mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+              <Sparkles size={16} className="text-brand" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-brand">Features</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold text-center text-foreground max-w-3xl">
+              Everything You Need to Succeed
+            </h2>
+          </div>
+
+          {/* Features Grid - 3 columns responsive */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {features.map(feature => {
               const isVideoLearning = feature.title === 'Video Learning'
+              const Icon = feature.icon
+
               return (
-                <Card
+                <div
                   key={feature.title}
-                  className="p-8 transition-all duration-300 hover:-translate-y-3 hover:shadow-xl hover:border-brand/60 flex flex-col items-center text-center min-h-80 border-2 group"
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl p-8 transition-all duration-300 hover:border-white/20 hover:bg-gradient-to-br hover:from-white/10 hover:to-white/5 hover:shadow-2xl hover:-translate-y-1"
                 >
-                  {/* Icon/Logo Container */}
-                  <div className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${feature.color === 'text-brand' ? 'from-brand/20 to-brand/10' : 'from-surface-2 to-surface'} border-3 border-${feature.color === 'text-brand' ? 'brand/30' : 'border/50'} ${feature.color} transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
-                    {isVideoLearning ? (
-                      <YouTubeLogo />
-                    ) : (
-                      <feature.icon size={32} strokeWidth={1.3} />
-                    )}
-                  </div>
+                  {/* Animated background glow on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/5 group-hover:to-white/[0.02] transition-all duration-300 pointer-events-none" />
 
-                  {/* Title */}
-                  <h3 className="mt-6 text-lg font-bold text-foreground leading-tight">
-                    {feature.title}
-                  </h3>
+                  {/* Content */}
+                  <div className="relative z-10 flex flex-col h-full">
+                    {/* Icon Container */}
+                    <div className={`inline-flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br ${feature.gradient} border border-white/10 ${feature.iconColor} mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                      {isVideoLearning ? (
+                        <YouTubeLogo />
+                      ) : (
+                        <Icon size={28} strokeWidth={1.5} />
+                      )}
+                    </div>
 
-                  {/* Description */}
-                  <p className="mt-4 text-sm leading-relaxed text-muted line-clamp-5 flex-grow">
-                    {feature.description}
-                  </p>
+                    {/* Title */}
+                    <h3 className="text-xl font-semibold text-white mb-3 leading-tight">
+                      {feature.title}
+                    </h3>
 
-                  {/* Learn More Link */}
-                  <div className="mt-auto pt-4">
-                    <div className="inline-flex items-center gap-1 text-xs font-semibold text-brand opacity-0 group-hover:opacity-100 transition-opacity">
-                      Learn more <span>→</span>
+                    {/* Description - Full text without truncation */}
+                    <p className="text-sm text-gray-400 leading-relaxed flex-grow mb-4">
+                      {feature.description}
+                    </p>
+
+                    {/* Learn More Link */}
+                    <div className="inline-flex items-center gap-2 text-sm font-medium text-brand group-hover:text-brand/80 transition-colors">
+                      <span>Learn more</span>
+                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
                   </div>
-                </Card>
+                </div>
               )
             })}
           </div>
