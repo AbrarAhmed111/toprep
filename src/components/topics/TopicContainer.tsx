@@ -99,7 +99,7 @@ export function TopicContainer({
   }
 
   return (
-    <div className={`group rounded-2xl border ${colors.bg} border-border hover:border-border/60 hover:shadow-sm transition-shadow`}>
+    <div className={`group rounded-2xl border ${colors.bg} border-white/10 hover:border-white/20 hover:shadow-sm transition-shadow`}>
       {/* Topic Header - Clean and Spacious */}
       <div className="px-6 py-5 sm:px-8 sm:py-6">
         {/* Top Row - Selection & Title */}
@@ -128,7 +128,7 @@ export function TopicContainer({
                       setIsEditing(false)
                     }
                   }}
-                  className="flex-1 rounded-lg border border-brand bg-surface px-3 py-2 text-lg font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-brand/50"
+                  className="flex-1 rounded-lg border border-brand bg-white/5 px-3 py-2 text-lg font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-brand/50 backdrop-blur-sm"
                 />
                 <button
                   onClick={commitRename}
@@ -142,7 +142,7 @@ export function TopicContainer({
                     setDraftName(topic.name)
                     setIsEditing(false)
                   }}
-                  className="rounded-lg p-2 text-muted hover:bg-surface-2 transition-colors"
+                  className="rounded-lg p-2 text-muted hover:bg-white/10 transition-colors"
                   title="Cancel"
                 >
                   <X size={18} />
@@ -187,7 +187,7 @@ export function TopicContainer({
                     className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
                       topic.aiExplanation
                         ? 'border-success/30 bg-success/5 text-success hover:bg-success/10'
-                        : 'border-border bg-surface text-foreground hover:bg-surface-2'
+                        : 'border-white/10 bg-white/5 text-foreground hover:bg-white/10 backdrop-blur-sm'
                     } disabled:opacity-50 disabled:cursor-not-allowed`}
                     title={topic.aiExplanation ? 'Explanation generated' : 'Generate explanation'}
                   >
@@ -214,7 +214,7 @@ export function TopicContainer({
                     className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
                       topic.aiExpectedQuestions && topic.aiExpectedQuestions.length > 0
                         ? 'border-success/30 bg-success/5 text-success hover:bg-success/10'
-                        : 'border-border bg-surface text-foreground hover:bg-surface-2'
+                        : 'border-white/10 bg-white/5 text-foreground hover:bg-white/10 backdrop-blur-sm'
                     } disabled:opacity-50 disabled:cursor-not-allowed`}
                     title={topic.aiExpectedQuestions && topic.aiExpectedQuestions.length > 0 ? 'Questions generated' : 'Generate questions'}
                   >

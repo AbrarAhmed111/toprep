@@ -34,22 +34,22 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="animate-scale-in relative z-10 w-full max-w-md rounded-2xl border border-border bg-surface shadow-lg"
+        className="animate-scale-in relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl shadow-lg"
       >
-        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
           <h2 className="text-base font-semibold text-foreground">{title}</h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded-full p-1.5 text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+            className="rounded-full p-1.5 text-muted transition-colors hover:bg-white/10 hover:text-foreground"
           >
             <X size={17} />
           </button>
         </div>
         <div className="px-5 py-4">{children}</div>
         {footer && (
-          <div className="flex justify-end gap-2 border-t border-border px-5 py-4">
+          <div className="flex justify-end gap-2 border-t border-white/10 px-5 py-4">
             {footer}
           </div>
         )}

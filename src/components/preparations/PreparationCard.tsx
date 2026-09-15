@@ -44,9 +44,9 @@ export function PreparationCard({
     topicCount > 0 ? Math.round((completedCount / topicCount) * 100) : 0
 
   return (
-    <Card className="group relative flex cursor-pointer flex-col gap-3 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-within:-translate-y-0.5 focus-within:shadow-md focus-within:ring-2 focus-within:ring-brand focus-within:ring-offset-2 focus-within:ring-offset-background">
+    <Card className="group relative flex cursor-pointer flex-col gap-3 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg focus-within:-translate-y-1 focus-within:shadow-lg focus-within:ring-2 focus-within:ring-brand focus-within:ring-offset-2 focus-within:ring-offset-background">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-brand">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand">
           <TypeIcon size={17} />
         </span>
         <h3 className="flex items-center gap-1 pt-1 text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-brand">
@@ -87,7 +87,7 @@ export function PreparationCard({
           </span>
           <span>{completedCount} completed</span>
         </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-2">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
           <div
             className="h-full rounded-full bg-brand transition-all duration-300"
             style={{ width: `${progress}%` }}
@@ -95,12 +95,12 @@ export function PreparationCard({
         </div>
       </div>
 
-      <div className="relative z-10 mt-1 flex items-center gap-1 border-t border-border pt-3">
+      <div className="relative z-10 mt-1 flex items-center gap-1 border-t border-white/10 pt-3">
         <button
           type="button"
           onClick={onEdit}
           aria-label="Edit preparation"
-          className="rounded-lg p-2 text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+          className="rounded-lg p-2 text-muted transition-colors hover:bg-white/10 hover:text-foreground"
         >
           <Pencil size={16} />
         </button>
@@ -108,7 +108,7 @@ export function PreparationCard({
           type="button"
           onClick={onDuplicate}
           aria-label="Duplicate preparation"
-          className="rounded-lg p-2 text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+          className="rounded-lg p-2 text-muted transition-colors hover:bg-white/10 hover:text-foreground"
         >
           <Copy size={16} />
         </button>
