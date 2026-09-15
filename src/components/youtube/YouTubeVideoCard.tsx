@@ -66,7 +66,7 @@ export function YouTubeVideoCard({
         <button
           onClick={() => onSelect(video)}
           disabled={isLoading || isSelected}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-600 disabled:bg-brand-400 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 text-sm font-medium text-brand-foreground transition-colors hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSelected && <Check size={16} />}
           {isSelected ? 'Selected' : 'Select Video'}
@@ -84,7 +84,7 @@ export function YouTubeVideoCard({
         <button
           onClick={onHide}
           disabled={isLoading}
-          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-2 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-danger-bg hover:text-danger disabled:opacity-50 disabled:cursor-not-allowed"
           title="Hide this video"
         >
           <X size={16} />

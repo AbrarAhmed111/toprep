@@ -204,7 +204,7 @@ export function GlobalYouTubeSearch({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end bg-black/50 sm:items-center">
+    <div className="fixed inset-0 z-50 flex items-end bg-foreground/10 sm:items-center">
       <div className="max-h-[90vh] w-full overflow-y-auto rounded-t-2xl bg-background sm:max-w-3xl sm:rounded-2xl">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div>
@@ -235,7 +235,7 @@ export function GlobalYouTubeSearch({
             <button
               onClick={performSearch}
               disabled={isSearching}
-              className="w-full rounded-lg bg-brand px-4 py-3 font-medium text-white transition-colors hover:bg-brand-600 disabled:bg-brand-400 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+              className="w-full rounded-lg bg-brand px-4 py-3 font-medium text-brand-foreground transition-colors hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
             >
               {isSearching && <Loader size={18} className="animate-spin" />}
               Search YouTube for {selectedTopics.length} Topic{selectedTopics.length !== 1 ? 's' : ''}
