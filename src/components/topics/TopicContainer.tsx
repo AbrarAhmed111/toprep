@@ -99,7 +99,7 @@ export function TopicContainer({
   }
 
   return (
-    <div className={`group rounded-2xl border transition-all ${colors.bg} border-border hover:border-border/60 hover:shadow-sm`}>
+    <div className={`group rounded-2xl border ${colors.bg} border-border hover:border-border/60 hover:shadow-sm transition-shadow`}>
       {/* Topic Header - Clean and Spacious */}
       <div className="px-6 py-5 sm:px-8 sm:py-6">
         {/* Top Row - Selection & Title */}
