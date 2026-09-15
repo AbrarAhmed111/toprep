@@ -260,7 +260,7 @@ export function TopicContainer({
             )}
 
             {isGeneratingExplanation && (
-              <div className="mt-3 animate-pulse">
+              <div className="mt-3">
                 <div className="rounded-lg border border-border/40 bg-surface/50 p-3 space-y-2">
                   <div className="h-3 bg-border/30 rounded w-3/4" />
                   <div className="h-3 bg-border/30 rounded w-1/2" />
@@ -288,7 +288,7 @@ export function TopicContainer({
             )}
 
             {isGeneratingQuestions && (
-              <div className="mt-3 animate-pulse">
+              <div className="mt-3">
                 <div className="rounded-lg border border-border/40 bg-surface/50 p-3 space-y-2">
                   <div className="h-3 bg-border/30 rounded w-full" />
                   <div className="h-3 bg-border/30 rounded w-5/6" />
