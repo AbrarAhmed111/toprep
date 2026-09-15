@@ -3,7 +3,7 @@
 import { KeyboardEvent, useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Check, GripVertical, Pencil, Trash2, X } from 'lucide-react'
+import { Check, GripVertical, Pencil, Trash2, X, Play } from 'lucide-react'
 import { Select } from '@/components/ui/Select'
 import {
   TOPIC_STATUSES,
@@ -24,6 +24,7 @@ interface TopicRowProps {
   onStatusChange: (status: TopicStatus) => void
   onMoveToSection: (sectionId: string | null) => void
   onDelete: () => void
+  onSearchYouTube: () => void
 }
 
 const STATUS_DOT: Record<TopicStatus, string> = {
@@ -42,6 +43,7 @@ export function TopicRow({
   onStatusChange,
   onMoveToSection,
   onDelete,
+  onSearchYouTube,
 }: TopicRowProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [draftName, setDraftName] = useState(topic.name)
@@ -186,6 +188,16 @@ export function TopicRow({
           </Select>
         </div>
       )}
+
+      <button
+        type="button"
+        onClick={onSearchYouTube}
+        aria-label="Search YouTube for this topic"
+        className="rounded-lg p-2 text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
+        title="Search YouTube"
+      >
+        <Play size={16} />
+      </button>
 
       <button
         type="button"

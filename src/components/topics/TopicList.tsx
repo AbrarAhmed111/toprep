@@ -16,10 +16,9 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Section, Topic, TopicStatus } from '@/types/preparation'
-import { TopicRow } from './TopicRow'
+import { TopicContainer } from './TopicContainer'
 
 interface TopicListProps {
   topics: Topic[]
@@ -82,35 +81,31 @@ export function TopicList({
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext
-        items={topics.map(t => t.id)}
-        strategy={verticalListSortingStrategy}
-      >
-        <Card className="overflow-hidden">
-          <div ref={animationParent}>
-            {topics.map(topic => (
-              <TopicRow
-                key={topic.id}
-                topic={topic}
-                sections={sections}
-                selected={selectedTopicIds.includes(topic.id)}
-                onToggleSelect={() => onToggleSelect(topic.id)}
-                onRename={name => onRename(topic.id, name)}
-                onStatusChange={status => onStatusChange(topic.id, status)}
-                onMoveToSection={sectionId =>
-                  onMoveToSection(topic.id, sectionId)
-                }
-                onDelete={() => onDelete(topic.id)}
-              />
-            ))}
-          </div>
-        </Card>
-      </SortableContext>
-    </DndContext>
+    <div className="space-y-2">
+      <div ref={animationParent} className="space-y-2">
+        {topics.length === 0 ? (
+          <EmptyState
+            icon={<ListChecks size={32} />}
+            title="No topics yet"
+            description={
+              emptyMessage ??
+              'Add your first topic above, or paste a list to add many at once.'
+            }
+          />
+        ) : (
+          topics.map(topic => (
+            <TopicContainer
+              key={topic.id}
+              topic={topic}
+              isSelected={selectedTopicIds.includes(topic.id)}
+              onToggleSelect={() => onToggleSelect(topic.id)}
+              onRename={name => onRename(topic.id, name)}
+              onStatusChange={status => onStatusChange(topic.id, status)}
+              onDelete={() => onDelete(topic.id)}
+            />
+          ))
+        )}
+      </div>
+    </div>
   )
 }

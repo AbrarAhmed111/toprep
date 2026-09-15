@@ -21,6 +21,17 @@ export interface Section {
   updatedAt: string
 }
 
+export interface YouTubeVideoData {
+  id: string
+  title: string
+  channelName: string
+  thumbnailUrl: string
+  duration: string
+  viewCount: number
+  publishedDate: string
+  url: string
+}
+
 export interface Topic {
   id: string
   preparationId: string
@@ -33,6 +44,7 @@ export interface Topic {
   aiExplanation: string | null
   aiExpectedQuestions: string[]
   selectedVideoIds: string[]
+  selectedVideos?: YouTubeVideoData[]
   createdAt: string
   updatedAt: string
 }
