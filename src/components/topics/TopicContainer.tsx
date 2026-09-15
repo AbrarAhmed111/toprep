@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Trash2, Pencil, Check, X } from 'lucide-react'
+import { Trash2, Pencil, Check, X, Zap } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { Topic, TopicStatus, TOPIC_STATUS_LABELS } from '@/types/preparation'
 import { TopicYouTubeSearchRedesigned } from '@/components/youtube/TopicYouTubeSearchRedesigned'
+import { generateTopicExplanation, generateExpectedQuestions } from '@/lib/api/aiService'
 
 interface TopicContainerProps {
   topic: Topic
@@ -12,6 +14,9 @@ interface TopicContainerProps {
   onRename: (name: string) => void
   onStatusChange: (status: TopicStatus) => void
   onDelete: () => void
+  onOpen?: () => void
+  preparation?: { type: string; description: string }
+  onUpdateTopic?: (updates: Partial<Topic>) => void
 }
 
 const STATUS_COLORS: Record<TopicStatus, { bg: string; text: string; badge: string }> = {
@@ -28,10 +33,47 @@ export function TopicContainer({
   onRename,
   onStatusChange,
   onDelete,
+  onOpen,
+  preparation,
+  onUpdateTopic,
 }: TopicContainerProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [draftName, setDraftName] = useState(topic.name)
+  const [isGeneratingExplanation, setIsGeneratingExplanation] = useState(false)
+  const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false)
   const colors = STATUS_COLORS[topic.status]
+
+  const handleGenerateExplanation = async () => {
+    if (!preparation) return
+    setIsGeneratingExplanation(true)
+    try {
+      const result = await generateTopicExplanation(topic, preparation as any)
+      onUpdateTopic?.({ aiExplanation: result.explanation })
+      toast.success('Explanation generated!')
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to generate explanation',
+      )
+    } finally {
+      setIsGeneratingExplanation(false)
+    }
+  }
+
+  const handleGenerateQuestions = async () => {
+    if (!preparation) return
+    setIsGeneratingQuestions(true)
+    try {
+      const result = await generateExpectedQuestions(topic, preparation as any)
+      onUpdateTopic?.({ aiExpectedQuestions: result.questions })
+      toast.success('Questions generated!')
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to generate questions',
+      )
+    } finally {
+      setIsGeneratingQuestions(false)
+    }
+  }
 
   const commitRename = () => {
     const trimmed = draftName.trim()
@@ -123,6 +165,30 @@ export function TopicContainer({
                 ))}
               </select>
 
+              {/* AI Buttons */}
+              {preparation && (
+                <>
+                  <button
+                    onClick={handleGenerateExplanation}
+                    disabled={isGeneratingExplanation}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Generate explanation"
+                  >
+                    <Zap size={14} />
+                    {isGeneratingExplanation ? 'Explaining...' : 'Explain'}
+                  </button>
+                  <button
+                    onClick={handleGenerateQuestions}
+                    disabled={isGeneratingQuestions}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Generate questions"
+                  >
+                    <Zap size={14} />
+                    {isGeneratingQuestions ? 'Asking...' : 'Questions'}
+                  </button>
+                </>
+              )}
+
               {/* Delete Button */}
               <button
                 onClick={onDelete}
@@ -132,6 +198,28 @@ export function TopicContainer({
                 <Trash2 size={16} />
               </button>
             </div>
+
+            {/* Generated Content Display */}
+            {topic.aiExplanation && (
+              <div className="mt-3 rounded-lg border border-border/40 bg-surface/50 p-3">
+                <p className="text-sm text-foreground leading-relaxed">
+                  {topic.aiExplanation}
+                </p>
+              </div>
+            )}
+
+            {topic.aiExpectedQuestions && topic.aiExpectedQuestions.length > 0 && (
+              <div className="mt-3 rounded-lg border border-border/40 bg-surface/50 p-3">
+                <ul className="space-y-1.5 text-sm text-foreground">
+                  {topic.aiExpectedQuestions.map((question, idx) => (
+                    <li key={idx} className="flex gap-2.5">
+                      <span className="shrink-0 font-medium text-muted">{idx + 1}.</span>
+                      <span>{question}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>

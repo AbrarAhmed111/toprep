@@ -17,7 +17,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { Card } from '@/components/ui/Card'
-import { Section, Topic, TopicStatus } from '@/types/preparation'
+import { Section, Topic, TopicStatus, Preparation } from '@/types/preparation'
 import { TopicList } from '@/components/topics/TopicList'
 import { AddSectionForm } from './AddSectionForm'
 import { SectionHeader } from './SectionHeader'
@@ -27,12 +27,14 @@ interface SectionBoardProps {
   sections: Section[]
   topics: Topic[]
   selectedTopicIds: string[]
+  preparation?: Preparation
   onToggleSelectTopic: (id: string) => void
   onSelectManyTopics: (ids: string[], select: boolean) => void
   onRenameTopic: (id: string, name: string) => void
   onStatusChangeTopic: (id: string, status: TopicStatus) => void
   onMoveTopicToSection: (id: string, sectionId: string | null) => void
   onDeleteTopic: (id: string) => void
+  onUpdateTopic?: (id: string, updates: Partial<Topic>) => void
   onReorderTopicsInGroup: (orderedIds: string[]) => void
   onAddSection: (name: string) => void
   onRenameSection: (id: string, name: string) => void
@@ -44,12 +46,14 @@ export function SectionBoard({
   sections,
   topics,
   selectedTopicIds,
+  preparation,
   onToggleSelectTopic,
   onSelectManyTopics,
   onRenameTopic,
   onStatusChangeTopic,
   onMoveTopicToSection,
   onDeleteTopic,
+  onUpdateTopic,
   onReorderTopicsInGroup,
   onAddSection,
   onRenameSection,
@@ -104,11 +108,13 @@ export function SectionBoard({
           topics={topics}
           sections={sections}
           selectedTopicIds={selectedTopicIds}
+          preparation={preparation}
           onToggleSelect={onToggleSelectTopic}
           onRename={onRenameTopic}
           onStatusChange={onStatusChangeTopic}
           onMoveToSection={onMoveTopicToSection}
           onDelete={onDeleteTopic}
+          onUpdateTopic={onUpdateTopic}
           onReorder={onReorderTopicsInGroup}
         />
       ) : (
@@ -151,12 +157,14 @@ export function SectionBoard({
                           topics={groupTopics}
                           sections={sections}
                           selectedTopicIds={selectedTopicIds}
+                          preparation={preparation}
                           emptyMessage="Drag topics here, or move one in using its Section dropdown."
                           onToggleSelect={onToggleSelectTopic}
                           onRename={onRenameTopic}
                           onStatusChange={onStatusChangeTopic}
                           onMoveToSection={onMoveTopicToSection}
                           onDelete={onDeleteTopic}
+                          onUpdateTopic={onUpdateTopic}
                           onReorder={onReorderTopicsInGroup}
                         />
                       </div>
@@ -175,12 +183,14 @@ export function SectionBoard({
               topics={unsectionedTopics}
               sections={sections}
               selectedTopicIds={selectedTopicIds}
+              preparation={preparation}
               emptyMessage="Every topic has a section."
               onToggleSelect={onToggleSelectTopic}
               onRename={onRenameTopic}
               onStatusChange={onStatusChangeTopic}
               onMoveToSection={onMoveTopicToSection}
               onDelete={onDeleteTopic}
+              onUpdateTopic={onUpdateTopic}
               onReorder={onReorderTopicsInGroup}
             />
           </div>

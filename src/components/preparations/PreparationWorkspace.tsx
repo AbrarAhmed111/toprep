@@ -466,12 +466,14 @@ export function PreparationWorkspace({
         sections={sections}
         topics={topics}
         selectedTopicIds={validSelectedTopicIds}
+        preparation={preparation}
         onToggleSelectTopic={toggleSelectTopic}
         onSelectManyTopics={selectManyTopics}
         onRenameTopic={(id, name) => updateTopic(id, { name })}
         onStatusChangeTopic={(id, status) => updateTopic(id, { status })}
         onMoveTopicToSection={moveTopicToSection}
         onDeleteTopic={deleteTopic}
+        onUpdateTopic={(id, updates) => updateTopic(id, updates)}
         onReorderTopicsInGroup={reorderTopics}
         onAddSection={addSection}
         onRenameSection={renameSection}

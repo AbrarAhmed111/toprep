@@ -17,7 +17,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { Section, Topic, TopicStatus } from '@/types/preparation'
+import { Section, Topic, TopicStatus, Preparation } from '@/types/preparation'
 import { TopicContainer } from './TopicContainer'
 
 interface TopicListProps {
@@ -25,12 +25,14 @@ interface TopicListProps {
   sections: Section[]
   selectedTopicIds: string[]
   emptyMessage?: string
+  preparation?: Preparation
   onToggleSelect: (id: string) => void
   onRename: (id: string, name: string) => void
   onStatusChange: (id: string, status: TopicStatus) => void
   onMoveToSection: (id: string, sectionId: string | null) => void
   onDelete: (id: string) => void
   onReorder: (orderedIds: string[]) => void
+  onUpdateTopic?: (id: string, updates: Partial<Topic>) => void
 }
 
 export function TopicList({
@@ -38,12 +40,14 @@ export function TopicList({
   sections,
   selectedTopicIds,
   emptyMessage,
+  preparation,
   onToggleSelect,
   onRename,
   onStatusChange,
   onMoveToSection,
   onDelete,
   onReorder,
+  onUpdateTopic,
 }: TopicListProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -102,6 +106,8 @@ export function TopicList({
               onRename={name => onRename(topic.id, name)}
               onStatusChange={status => onStatusChange(topic.id, status)}
               onDelete={() => onDelete(topic.id)}
+              preparation={preparation}
+              onUpdateTopic={updates => onUpdateTopic?.(topic.id, updates)}
             />
           ))
         )}
