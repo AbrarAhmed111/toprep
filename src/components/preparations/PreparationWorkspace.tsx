@@ -11,6 +11,7 @@ import {
   topicRemoved,
   topicUpdated,
   topicsAddedMany,
+  topicsReordered,
 } from '@/store/topics/topicsSlice'
 import { generateId } from '@/lib/id'
 import { parseBulkTopics } from '@/lib/topics/parseBulkTopics'
@@ -47,8 +48,16 @@ export function PreparationWorkspace({
   const [editOpen, setEditOpen] = useState(false)
 
   const topics = useMemo(
-    () => allTopics.filter(t => t.preparationId === preparationId),
+    () =>
+      allTopics
+        .filter(t => t.preparationId === preparationId)
+        .sort((a, b) => a.position - b.position),
     [allTopics, preparationId],
+  )
+
+  const nextPosition = useMemo(
+    () => topics.reduce((max, t) => Math.max(max, t.position), -1) + 1,
+    [topics],
   )
 
   const existingNames = useMemo(
@@ -76,7 +85,7 @@ export function PreparationWorkspace({
         status: 'need_to_study',
         priority: 'medium',
         notes: '',
-        position: topics.length,
+        position: nextPosition,
         aiExplanation: null,
         aiExpectedQuestions: [],
         selectedVideoIds: [],
@@ -108,7 +117,7 @@ export function PreparationWorkspace({
           status: 'need_to_study' as TopicStatus,
           priority: 'medium' as Priority,
           notes: '',
-          position: topics.length + index,
+          position: nextPosition + index,
           aiExplanation: null,
           aiExpectedQuestions: [],
           selectedVideoIds: [],
@@ -138,6 +147,10 @@ export function PreparationWorkspace({
 
   const deleteTopic = (id: string) => {
     dispatch(topicRemoved(id))
+  }
+
+  const reorderTopics = (orderedIds: string[]) => {
+    dispatch(topicsReordered({ preparationId, orderedIds }))
   }
 
   const handleEditSubmit = (values: PreparationFormValues) => {
@@ -238,12 +251,19 @@ export function PreparationWorkspace({
 
       <AddTopicPanel onAddSingle={addSingleTopic} onAddBulk={addBulkTopics} />
 
+      {topics.length > 1 && (
+        <p className="-mb-2 text-xs text-muted">
+          Drag the handle on the left of a topic to reorder it.
+        </p>
+      )}
+
       <TopicList
         topics={topics}
         onRename={(id, name) => updateTopic(id, { name })}
         onStatusChange={(id, status) => updateTopic(id, { status })}
         onPriorityChange={(id, priority) => updateTopic(id, { priority })}
         onDelete={deleteTopic}
+        onReorder={reorderTopics}
       />
 
       <PreparationFormModal

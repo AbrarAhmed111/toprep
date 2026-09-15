@@ -1,6 +1,20 @@
 'use client'
 
 import { ListChecks } from 'lucide-react'
+import {
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Priority, Topic, TopicStatus } from '@/types/preparation'
@@ -12,6 +26,7 @@ interface TopicListProps {
   onStatusChange: (id: string, status: TopicStatus) => void
   onPriorityChange: (id: string, priority: Priority) => void
   onDelete: (id: string) => void
+  onReorder: (orderedIds: string[]) => void
 }
 
 export function TopicList({
@@ -20,7 +35,15 @@ export function TopicList({
   onStatusChange,
   onPriorityChange,
   onDelete,
+  onReorder,
 }: TopicListProps) {
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  )
+
   if (topics.length === 0) {
     return (
       <EmptyState
@@ -31,18 +54,45 @@ export function TopicList({
     )
   }
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const oldIndex = topics.findIndex(t => t.id === active.id)
+    const newIndex = topics.findIndex(t => t.id === over.id)
+    if (oldIndex === -1 || newIndex === -1) return
+
+    const reordered = [...topics]
+    const [moved] = reordered.splice(oldIndex, 1)
+    reordered.splice(newIndex, 0, moved)
+    onReorder(reordered.map(t => t.id))
+  }
+
   return (
-    <Card className="overflow-hidden">
-      {topics.map(topic => (
-        <TopicRow
-          key={topic.id}
-          topic={topic}
-          onRename={name => onRename(topic.id, name)}
-          onStatusChange={status => onStatusChange(topic.id, status)}
-          onPriorityChange={priority => onPriorityChange(topic.id, priority)}
-          onDelete={() => onDelete(topic.id)}
-        />
-      ))}
-    </Card>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={topics.map(t => t.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <Card className="overflow-hidden">
+          {topics.map(topic => (
+            <TopicRow
+              key={topic.id}
+              topic={topic}
+              onRename={name => onRename(topic.id, name)}
+              onStatusChange={status => onStatusChange(topic.id, status)}
+              onPriorityChange={priority =>
+                onPriorityChange(topic.id, priority)
+              }
+              onDelete={() => onDelete(topic.id)}
+            />
+          ))}
+        </Card>
+      </SortableContext>
+    </DndContext>
   )
 }

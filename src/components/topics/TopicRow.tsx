@@ -1,7 +1,9 @@
 'use client'
 
 import { KeyboardEvent, useState } from 'react'
-import { Check, Pencil, Trash2, X } from 'lucide-react'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { Check, GripVertical, Pencil, Trash2, X } from 'lucide-react'
 import { Select } from '@/components/ui/Select'
 import {
   PRIORITIES,
@@ -38,6 +40,20 @@ export function TopicRow({
   const [isEditing, setIsEditing] = useState(false)
   const [draftName, setDraftName] = useState(topic.name)
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: topic.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
   const commitRename = () => {
     const trimmed = draftName.trim()
     if (trimmed && trimmed !== topic.name) onRename(trimmed)
@@ -56,7 +72,23 @@ export function TopicRow({
   }
 
   return (
-    <div className="group flex flex-wrap items-center gap-3 border-b border-border px-4 py-3 transition-colors last:border-b-0 hover:bg-surface-2">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`group flex flex-wrap items-center gap-2 border-b border-border bg-surface px-2 py-3 transition-colors last:border-b-0 hover:bg-surface-2 ${
+        isDragging ? 'relative z-10 shadow-lg' : ''
+      }`}
+    >
+      <button
+        type="button"
+        aria-label="Drag to reorder"
+        className="cursor-grab touch-none rounded-md p-1.5 text-muted opacity-0 transition-opacity hover:bg-surface-2 hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 active:cursor-grabbing"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical size={15} />
+      </button>
+
       <span
         className={`h-2 w-2 shrink-0 rounded-full ${STATUS_DOT[topic.status]}`}
         aria-hidden="true"
