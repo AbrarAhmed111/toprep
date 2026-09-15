@@ -4,16 +4,31 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    font-family: "Inter", sans-serif;
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --brand: #4f46e5;
+  --brand-foreground: #ffffff;
+  --surface: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .no-scroll {
-    scrollbar-width: none !important; /* Hides scrollbar in Firefox */
-    -ms-overflow-style: none !important; /* Hides scrollbar in IE & Edge */
+  scrollbar-width: none !important; /* Hides scrollbar in Firefox */
+  -ms-overflow-style: none !important; /* Hides scrollbar in IE & Edge */
 }
 
 .no-scroll::-webkit-scrollbar {
-    display: none !important; /* Hides scrollbar in Chrome, Safari, and Edge */
+  display: none !important; /* Hides scrollbar in Chrome, Safari, and Edge */
 }

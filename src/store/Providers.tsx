@@ -1,15 +1,22 @@
-"use client";
+'use client'
 
-import { Provider } from "react-redux";
-import { ReactNode } from "react";
-import store from "./store";
+import { Provider } from 'react-redux'
+import { ReactNode, useEffect } from 'react'
+import store from './store'
+import { preparationsHydrated } from './preparations/preparationsSlice'
+import { topicsHydrated } from './topics/topicsSlice'
 
 type ProvidersProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 const Providers = ({ children }: ProvidersProps) => {
-  return <Provider store={store}>{children}</Provider>;
-};
+  useEffect(() => {
+    store.dispatch(preparationsHydrated())
+    store.dispatch(topicsHydrated())
+  }, [])
 
-export default Providers;
+  return <Provider store={store}>{children}</Provider>
+}
+
+export default Providers
