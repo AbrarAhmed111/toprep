@@ -22,6 +22,7 @@ import { TopicList } from '@/components/topics/TopicList'
 import { AddSectionForm } from './AddSectionForm'
 import { SectionHeader } from './SectionHeader'
 import { DeleteSectionDialog } from './DeleteSectionDialog'
+import { SectionCarousel } from './SectionCarousel'
 
 interface SectionBoardProps {
   sections: Section[]
@@ -119,61 +120,22 @@ export function SectionBoard({
         />
       ) : (
         <>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleSectionDragEnd}
-          >
-            <SortableContext
-              items={sections.map(s => s.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              <div
-                ref={sectionsAnimationParent}
-                className="flex flex-col gap-4"
-              >
-                {sections.map(section => {
-                  const groupTopics = topicsBySection(section.id)
-                  const { allSelected, someSelected } =
-                    selectionState(groupTopics)
-                  return (
-                    <Card key={section.id} className="overflow-hidden">
-                      <SectionHeader
-                        section={section}
-                        topicCount={groupTopics.length}
-                        allSelected={allSelected}
-                        someSelected={someSelected}
-                        onToggleSelectAll={() =>
-                          onSelectManyTopics(
-                            groupTopics.map(t => t.id),
-                            !allSelected,
-                          )
-                        }
-                        onRename={name => onRenameSection(section.id, name)}
-                        onDelete={() => setPendingDelete(section)}
-                      />
-                      <div className="p-3">
-                        <TopicList
-                          topics={groupTopics}
-                          sections={sections}
-                          selectedTopicIds={selectedTopicIds}
-                          preparation={preparation}
-                          emptyMessage="Drag topics here, or move one in using its Section dropdown."
-                          onToggleSelect={onToggleSelectTopic}
-                          onRename={onRenameTopic}
-                          onStatusChange={onStatusChangeTopic}
-                          onMoveToSection={onMoveTopicToSection}
-                          onDelete={onDeleteTopic}
-                          onUpdateTopic={onUpdateTopic}
-                          onReorder={onReorderTopicsInGroup}
-                        />
-                      </div>
-                    </Card>
-                  )
-                })}
-              </div>
-            </SortableContext>
-          </DndContext>
+          <SectionCarousel
+            sections={sections}
+            topics={topics}
+            selectedTopicIds={selectedTopicIds}
+            preparation={preparation}
+            onToggleSelectTopic={onToggleSelectTopic}
+            onSelectManyTopics={onSelectManyTopics}
+            onRenameTopic={onRenameTopic}
+            onStatusChangeTopic={onStatusChangeTopic}
+            onMoveTopicToSection={onMoveTopicToSection}
+            onDeleteTopic={onDeleteTopic}
+            onUpdateTopic={onUpdateTopic}
+            onReorderTopicsInGroup={onReorderTopicsInGroup}
+            onRenameSection={onRenameSection}
+            onDeleteSection={onDeleteSection}
+          />
 
           <div>
             <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-muted">
