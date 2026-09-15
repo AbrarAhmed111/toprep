@@ -3,6 +3,42 @@ import { BookOpen, Sparkles, Youtube, FileText, Brain, Lightbulb } from 'lucide-
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 
+// AI Provider Logo Components
+const ClaudeLogo = () => (
+  <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
+    <circle cx="12" cy="12" r="10" fill="#FF9D00"/>
+    <path d="M12 6C8.68 6 6 8.68 6 12s2.68 6 6 6 6-2.68 6-6-2.68-6-6-6z" fill="#fff" opacity="0.3"/>
+  </svg>
+)
+
+const GPTLogo = () => (
+  <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
+    <circle cx="12" cy="12" r="10" fill="#00A67E"/>
+    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" fill="#fff" opacity="0.4"/>
+  </svg>
+)
+
+const GeminiLogo = () => (
+  <svg viewBox="0 0 24 24" className="w-8 h-8">
+    <defs>
+      <linearGradient id="gemini-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style={{ stopColor: '#4285F4', stopOpacity: 1 }} />
+        <stop offset="50%" style={{ stopColor: '#EA4335', stopOpacity: 1 }} />
+        <stop offset="100%" style={{ stopColor: '#FBBC04', stopOpacity: 1 }} />
+      </linearGradient>
+    </defs>
+    <circle cx="12" cy="12" r="10" fill="url(#gemini-grad)"/>
+    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" fill="#fff" opacity="0.3"/>
+  </svg>
+)
+
+const YouTubeLogo = () => (
+  <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
+    <circle cx="12" cy="12" r="10" fill="#FF0000"/>
+    <polygon points="10,8 10,16 16,12" fill="#fff"/>
+  </svg>
+)
+
 const features = [
   {
     icon: FileText,
@@ -39,23 +75,23 @@ const features = [
 const aiProviders = [
   {
     name: 'Claude',
-    color: 'from-orange-500 to-orange-600',
-    textColor: 'text-orange-600',
+    logo: ClaudeLogo,
+    description: 'Advanced reasoning and multi-turn conversations',
   },
   {
     name: 'GPT',
-    color: 'from-red-500 to-red-600',
-    textColor: 'text-red-600',
+    logo: GPTLogo,
+    description: 'State-of-the-art language understanding',
   },
   {
     name: 'Gemini',
-    color: 'from-blue-500 via-red-500 to-yellow-500',
-    textColor: 'text-blue-600',
+    logo: GeminiLogo,
+    description: 'Multimodal AI with advanced analysis',
   },
   {
     name: 'YouTube',
-    color: 'from-red-600 to-red-700',
-    textColor: 'text-red-600',
+    logo: YouTubeLogo,
+    description: 'Video learning and content discovery',
   },
 ]
 
@@ -73,11 +109,7 @@ export default function Home() {
       />
 
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 py-16 text-center sm:py-24">
-        {/* AI Powered Badge */}
-        <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-semibold uppercase tracking-wider">
-          <Sparkles size={14} className="text-brand" />
-          <span className="text-foreground">AI Powered</span>
-        </div>
+       
 
         <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
           Prepare smarter with
@@ -95,23 +127,23 @@ export default function Home() {
         </Link>
 
         {/* Main Features Grid - 5 columns */}
-        <div className="w-full mt-12">
-          <h2 className="mb-6 text-xl font-semibold text-foreground">
+        <div className="w-full mt-16">
+          <h2 className="mb-8 text-2xl font-bold text-foreground text-center">
             Everything You Need to Succeed
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
             {features.map(feature => (
               <Card
                 key={feature.title}
-                className="p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+                className="p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:border-brand/50 flex flex-col items-center text-center"
               >
-                <span className={`flex h-10 w-10 items-center justify-center rounded-xl bg-surface-2 ${feature.color}`}>
-                  <feature.icon size={20} />
-                </span>
-                <h3 className="mt-3 text-sm font-semibold text-foreground">
+                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-2 border-2 border-border/50 ${feature.color} transition-all duration-300`}>
+                  <feature.icon size={24} strokeWidth={1.5} />
+                </div>
+                <h3 className="mt-4 text-sm font-bold text-foreground leading-tight">
                   {feature.title}
                 </h3>
-                <p className="mt-2 text-xs leading-relaxed text-muted">
+                <p className="mt-3 text-xs leading-relaxed text-muted line-clamp-3">
                   {feature.description}
                 </p>
               </Card>
@@ -120,55 +152,65 @@ export default function Home() {
         </div>
 
         {/* Powered By AI Section */}
-        <div className="w-full mt-16 pt-12 border-t border-border/50">
-          <h2 className="mb-2 text-xl font-bold text-foreground">
-            ⚡ Powered by Leading AI Models
+        <div className="w-full mt-20 pt-12 border-t border-border/50">
+          <h2 className="mb-3 text-2xl font-bold text-foreground text-center">
+            ⚡ Powered by Industry-Leading AI
           </h2>
-          <p className="mb-10 text-sm text-muted">
-            We integrate multiple advanced LLM providers to give you the best learning experience
+          <p className="mb-12 text-sm text-muted text-center max-w-2xl mx-auto">
+            We integrate multiple advanced LLM providers to give you the best learning experience and multiple ways to understand complex topics
           </p>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-2xl mx-auto">
-            {aiProviders.map(provider => (
-              <div
-                key={provider.name}
-                className={`flex flex-col items-center justify-center gap-3 px-4 py-6 rounded-xl border-2 border-border bg-gradient-to-br ${provider.color} opacity-10 hover:opacity-20 hover:border-brand/50 transition-all`}
-              >
-                <div
-                  className={`h-12 w-12 rounded-full bg-gradient-to-br ${provider.color}`}
-                />
-                <span className="text-sm font-semibold text-foreground text-center">
-                  {provider.name}
-                </span>
-              </div>
-            ))}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-4xl mx-auto">
+            {aiProviders.map(provider => {
+              const LogoComponent = provider.logo
+              return (
+                <Card
+                  key={provider.name}
+                  className="flex flex-col items-center justify-center gap-4 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-brand/50"
+                >
+                  <div className="text-orange-500 dark:text-orange-400">
+                    <LogoComponent />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-sm font-bold text-foreground">
+                      {provider.name}
+                    </h3>
+                    <p className="mt-1 text-xs text-muted leading-tight">
+                      {provider.description}
+                    </p>
+                  </div>
+                </Card>
+              )
+            })}
           </div>
 
-          <p className="mt-8 text-xs text-muted text-center">
-            🔐 Your data is secure. We use official APIs from each provider with enterprise-grade encryption.
-          </p>
+          <div className="mt-10 p-4 rounded-lg bg-surface/50 border border-border/50">
+            <p className="text-xs text-muted text-center">
+              🔐 <span className="font-medium text-foreground">Your data is secure.</span> We use official APIs from each provider with enterprise-grade encryption and never store your study materials.
+            </p>
+          </div>
         </div>
 
         {/* Feature Highlights */}
-        <div className="w-full mt-16 grid grid-cols-1 gap-6 sm:grid-cols-3">
-          <div className="rounded-lg border border-border/50 bg-surface/30 p-6">
-            <h3 className="font-semibold text-foreground mb-2">📄 Smart Extraction</h3>
-            <p className="text-sm text-muted">
-              Upload PDFs and AI automatically extracts and organizes topics in optimal order
+        <div className="w-full mt-16 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <Card className="p-6 border-l-4 border-l-blue-500 hover:shadow-md transition-all">
+            <h3 className="text-sm font-bold text-foreground mb-3">📄 Smart Extraction</h3>
+            <p className="text-sm text-muted leading-relaxed">
+              Upload PDFs and AI automatically extracts and organizes topics in optimal learning order
             </p>
-          </div>
-          <div className="rounded-lg border border-border/50 bg-surface/30 p-6">
-            <h3 className="font-semibold text-foreground mb-2">▶️ Video Integration</h3>
-            <p className="text-sm text-muted">
+          </Card>
+          <Card className="p-6 border-l-4 border-l-danger hover:shadow-md transition-all">
+            <h3 className="text-sm font-bold text-foreground mb-3">▶️ Video Integration</h3>
+            <p className="text-sm text-muted leading-relaxed">
               Search YouTube directly from topics and build curated playlists of quality content
             </p>
-          </div>
-          <div className="rounded-lg border border-border/50 bg-surface/30 p-6">
-            <h3 className="font-semibold text-foreground mb-2">🧠 AI Assistance</h3>
-            <p className="text-sm text-muted">
+          </Card>
+          <Card className="p-6 border-l-4 border-l-success hover:shadow-md transition-all">
+            <h3 className="text-sm font-bold text-foreground mb-3">🧠 AI Assistance</h3>
+            <p className="text-sm text-muted leading-relaxed">
               Get personalized explanations, practice questions, and learning recommendations
             </p>
-          </div>
+          </Card>
         </div>
       </div>
 
