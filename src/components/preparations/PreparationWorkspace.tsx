@@ -15,12 +15,7 @@ import {
 } from '@/store/topics/topicsSlice'
 import { generateId } from '@/lib/id'
 import { parseBulkTopics } from '@/lib/topics/parseBulkTopics'
-import {
-  PRIORITY_LABELS,
-  Priority,
-  Topic,
-  TopicStatus,
-} from '@/types/preparation'
+import { Topic, TopicStatus } from '@/types/preparation'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { AddTopicPanel } from '@/components/topics/AddTopicPanel'
@@ -83,7 +78,6 @@ export function PreparationWorkspace({
         sectionId: null,
         name,
         status: 'need_to_study',
-        priority: 'medium',
         notes: '',
         position: nextPosition,
         aiExplanation: null,
@@ -115,7 +109,6 @@ export function PreparationWorkspace({
           sectionId: null,
           name,
           status: 'need_to_study' as TopicStatus,
-          priority: 'medium' as Priority,
           notes: '',
           position: nextPosition + index,
           aiExplanation: null,
@@ -210,9 +203,6 @@ export function PreparationWorkspace({
           )}
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Badge tone="brand">{preparation.type}</Badge>
-            <Badge tone="warning">
-              {PRIORITY_LABELS[preparation.priority]} priority
-            </Badge>
             {preparation.targetDate && (
               <Badge tone="neutral">
                 Target: {new Date(preparation.targetDate).toLocaleDateString()}
@@ -261,7 +251,6 @@ export function PreparationWorkspace({
         topics={topics}
         onRename={(id, name) => updateTopic(id, { name })}
         onStatusChange={(id, status) => updateTopic(id, { status })}
-        onPriorityChange={(id, priority) => updateTopic(id, { priority })}
         onDelete={deleteTopic}
         onReorder={reorderTopics}
       />

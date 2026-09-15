@@ -8,11 +8,8 @@ import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
 import {
   PREPARATION_TYPES,
-  PRIORITIES,
-  PRIORITY_LABELS,
   Preparation,
   PreparationType,
-  Priority,
 } from '@/types/preparation'
 
 export interface PreparationFormValues {
@@ -20,7 +17,6 @@ export interface PreparationFormValues {
   description: string
   type: PreparationType
   targetDate: string
-  priority: Priority
 }
 
 interface PreparationFormModalProps {
@@ -35,7 +31,6 @@ const emptyValues: PreparationFormValues = {
   description: '',
   type: 'Interview',
   targetDate: '',
-  priority: 'medium',
 }
 
 export function PreparationFormModal({
@@ -56,7 +51,6 @@ export function PreparationFormModal({
             description: preparation.description,
             type: preparation.type,
             targetDate: preparation.targetDate ?? '',
-            priority: preparation.priority,
           }
         : emptyValues,
     )
@@ -133,33 +127,16 @@ export function PreparationFormModal({
               </option>
             ))}
           </Select>
-          <Select
-            name="priority"
-            label="Priority"
-            value={values.priority}
+          <Input
+            type="date"
+            name="targetDate"
+            label="Target Date"
+            value={values.targetDate}
             onChange={event =>
-              setValues(v => ({
-                ...v,
-                priority: event.target.value as Priority,
-              }))
+              setValues(v => ({ ...v, targetDate: event.target.value }))
             }
-          >
-            {PRIORITIES.map(priority => (
-              <option key={priority} value={priority}>
-                {PRIORITY_LABELS[priority]}
-              </option>
-            ))}
-          </Select>
+          />
         </div>
-        <Input
-          type="date"
-          name="targetDate"
-          label="Target Date"
-          value={values.targetDate}
-          onChange={event =>
-            setValues(v => ({ ...v, targetDate: event.target.value }))
-          }
-        />
       </form>
     </Modal>
   )

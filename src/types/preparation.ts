@@ -1,6 +1,5 @@
 export type PreparationType = 'Interview' | 'Exam' | 'Certification' | 'Custom'
 export type PreparationStatus = 'active' | 'archived'
-export type Priority = 'low' | 'medium' | 'high'
 export type TopicStatus =
   'need_to_study' | 'understood' | 'completed' | 'skipping'
 
@@ -10,7 +9,6 @@ export interface Preparation {
   description: string
   type: PreparationType
   targetDate: string | null
-  priority: Priority
   status: PreparationStatus
   createdAt: string
   updatedAt: string
@@ -33,7 +31,6 @@ export interface Topic {
   sectionId: string | null
   name: string
   status: TopicStatus
-  priority: Priority
   notes: string
   position: number
   // Reserved for later phases (YouTube integration, AI features).
@@ -50,14 +47,6 @@ export const PREPARATION_TYPES: PreparationType[] = [
   'Certification',
   'Custom',
 ]
-
-export const PRIORITIES: Priority[] = ['low', 'medium', 'high']
-
-export const PRIORITY_LABELS: Record<Priority, string> = {
-  low: 'Low',
-  medium: 'Medium',
-  high: 'High',
-}
 
 export const TOPIC_STATUSES: TopicStatus[] = [
   'need_to_study',

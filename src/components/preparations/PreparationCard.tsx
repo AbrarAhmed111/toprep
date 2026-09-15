@@ -14,18 +14,8 @@ import {
   Users,
 } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
-import { Badge, BadgeTone } from '@/components/ui/Badge'
-import {
-  Preparation,
-  PreparationType,
-  PRIORITY_LABELS,
-} from '@/types/preparation'
-
-const PRIORITY_TONE: Record<Preparation['priority'], BadgeTone> = {
-  low: 'neutral',
-  medium: 'brand',
-  high: 'warning',
-}
+import { Badge } from '@/components/ui/Badge'
+import { Preparation, PreparationType } from '@/types/preparation'
 
 const TYPE_ICON: Record<PreparationType, typeof Users> = {
   Interview: Users,
@@ -100,9 +90,6 @@ export function PreparationCard({
 
       <div className="flex flex-wrap items-center gap-2">
         <Badge tone="brand">{preparation.type}</Badge>
-        <Badge tone={PRIORITY_TONE[preparation.priority]}>
-          {PRIORITY_LABELS[preparation.priority]} priority
-        </Badge>
         {preparation.targetDate && (
           <Badge tone="neutral">
             Target: {new Date(preparation.targetDate).toLocaleDateString()}

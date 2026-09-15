@@ -6,9 +6,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { Check, GripVertical, Pencil, Trash2, X } from 'lucide-react'
 import { Select } from '@/components/ui/Select'
 import {
-  PRIORITIES,
-  PRIORITY_LABELS,
-  Priority,
   TOPIC_STATUSES,
   TOPIC_STATUS_LABELS,
   Topic,
@@ -19,7 +16,6 @@ interface TopicRowProps {
   topic: Topic
   onRename: (name: string) => void
   onStatusChange: (status: TopicStatus) => void
-  onPriorityChange: (priority: Priority) => void
   onDelete: () => void
 }
 
@@ -34,7 +30,6 @@ export function TopicRow({
   topic,
   onRename,
   onStatusChange,
-  onPriorityChange,
   onDelete,
 }: TopicRowProps) {
   const [isEditing, setIsEditing] = useState(false)
@@ -136,7 +131,7 @@ export function TopicRow({
         )}
       </div>
 
-      <div className="w-36">
+      <div className="w-40">
         <Select
           aria-label="Status"
           value={topic.status}
@@ -145,20 +140,6 @@ export function TopicRow({
           {TOPIC_STATUSES.map(status => (
             <option key={status} value={status}>
               {TOPIC_STATUS_LABELS[status]}
-            </option>
-          ))}
-        </Select>
-      </div>
-
-      <div className="w-28">
-        <Select
-          aria-label="Priority"
-          value={topic.priority}
-          onChange={event => onPriorityChange(event.target.value as Priority)}
-        >
-          {PRIORITIES.map(priority => (
-            <option key={priority} value={priority}>
-              {PRIORITY_LABELS[priority]}
             </option>
           ))}
         </Select>

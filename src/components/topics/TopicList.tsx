@@ -17,14 +17,13 @@ import {
 } from '@dnd-kit/sortable'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { Priority, Topic, TopicStatus } from '@/types/preparation'
+import { Topic, TopicStatus } from '@/types/preparation'
 import { TopicRow } from './TopicRow'
 
 interface TopicListProps {
   topics: Topic[]
   onRename: (id: string, name: string) => void
   onStatusChange: (id: string, status: TopicStatus) => void
-  onPriorityChange: (id: string, priority: Priority) => void
   onDelete: (id: string) => void
   onReorder: (orderedIds: string[]) => void
 }
@@ -33,7 +32,6 @@ export function TopicList({
   topics,
   onRename,
   onStatusChange,
-  onPriorityChange,
   onDelete,
   onReorder,
 }: TopicListProps) {
@@ -85,9 +83,6 @@ export function TopicList({
               topic={topic}
               onRename={name => onRename(topic.id, name)}
               onStatusChange={status => onStatusChange(topic.id, status)}
-              onPriorityChange={priority =>
-                onPriorityChange(topic.id, priority)
-              }
               onDelete={() => onDelete(topic.id)}
             />
           ))}
