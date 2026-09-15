@@ -189,10 +189,10 @@ export function SectionBoard({
                       </div>
 
                       {isExpanded && (
-                        <div className="border-t border-border/40 p-3 animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div className="border-t border-border/40 p-3 animate-in fade-in slide-in-from-top-4 duration-500 relative">
                           {/* Glow effect on expansion */}
-                          <div className="absolute inset-0 rounded-lg bg-brand/5 " />
-                          <div className="relative">
+                          <div className="absolute inset-0 rounded-lg bg-brand/5 pointer-events-none" />
+                          <div className="relative z-10">
                             <TopicList
                               topics={groupTopics}
                               sections={sections}
