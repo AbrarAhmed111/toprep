@@ -34,14 +34,14 @@ export function AddTopicPanel({ onAddSingle, onAddBulk }: AddTopicPanelProps) {
 
   return (
     <Card className="p-4">
-      <div className="mb-3 inline-flex rounded-lg border border-border bg-surface p-1 text-sm">
+      <div className="mb-3 inline-flex rounded-xl border border-border bg-surface-2 p-1 text-sm">
         <button
           type="button"
           onClick={() => setMode('single')}
-          className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
+          className={`rounded-lg px-3 py-1.5 font-medium transition-colors ${
             mode === 'single'
-              ? 'bg-white text-foreground shadow-sm'
-              : 'text-muted'
+              ? 'bg-surface text-foreground shadow-sm'
+              : 'text-muted hover:text-foreground'
           }`}
         >
           Single Topic
@@ -49,10 +49,10 @@ export function AddTopicPanel({ onAddSingle, onAddBulk }: AddTopicPanelProps) {
         <button
           type="button"
           onClick={() => setMode('bulk')}
-          className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
+          className={`rounded-lg px-3 py-1.5 font-medium transition-colors ${
             mode === 'bulk'
-              ? 'bg-white text-foreground shadow-sm'
-              : 'text-muted'
+              ? 'bg-surface text-foreground shadow-sm'
+              : 'text-muted hover:text-foreground'
           }`}
         >
           Bulk Add

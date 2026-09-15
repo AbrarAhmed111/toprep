@@ -56,6 +56,11 @@ export function PreparationWorkspace({
     [topics],
   )
 
+  const completedCount = useMemo(
+    () => topics.filter(t => t.status === 'completed').length,
+    [topics],
+  )
+
   const addSingleTopic = (name: string) => {
     if (existingNames.has(name.toLowerCase())) {
       toast.error('That topic already exists in this preparation')
@@ -174,7 +179,7 @@ export function PreparationWorkspace({
     <div className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-10">
       <Link
         href="/preparations"
-        className="inline-flex w-fit items-center gap-1.5 text-sm text-muted hover:text-foreground"
+        className="inline-flex w-fit items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
       >
         <ArrowLeft size={15} />
         Back to Preparations
@@ -208,12 +213,28 @@ export function PreparationWorkspace({
         <button
           type="button"
           onClick={() => setEditOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-2 text-sm font-medium text-foreground hover:bg-surface"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
         >
           <Pencil size={15} />
           Edit
         </button>
       </div>
+
+      {topics.length > 0 && (
+        <div className="flex items-center gap-3">
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-2">
+            <div
+              className="h-full rounded-full bg-brand transition-all duration-300"
+              style={{
+                width: `${Math.round((completedCount / topics.length) * 100)}%`,
+              }}
+            />
+          </div>
+          <span className="shrink-0 text-xs font-medium text-muted">
+            {completedCount} of {topics.length} completed
+          </span>
+        </div>
+      )}
 
       <AddTopicPanel onAddSingle={addSingleTopic} onAddBulk={addBulkTopics} />
 

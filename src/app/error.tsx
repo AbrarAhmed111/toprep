@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { RiAlarmWarningFill } from 'react-icons/ri'
 import Link from 'next/link'
+import { Button } from '@/components/ui/Button'
 
 export default function Error({
   error,
@@ -17,44 +18,35 @@ export default function Error({
   }, [error])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+    <main className="flex min-h-[70vh] flex-col items-center justify-center px-4">
       <div className="text-center">
-        <RiAlarmWarningFill
-          size={80}
-          className="mx-auto animate-pulse text-red-500 mb-6"
-        />
+        <span className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-danger-bg text-danger">
+          <RiAlarmWarningFill size={32} />
+        </span>
 
-        <h1 className="text-4xl font-bold text-gray-900 mb-4 md:text-6xl">
-          Oops! Something went wrong
+        <h1 className="mb-3 text-3xl font-semibold text-foreground md:text-4xl">
+          Something went wrong
         </h1>
 
-        <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-          We encountered an unexpected error. Please try again or return to the
-          homepage.
+        <p className="mx-auto mb-8 max-w-md text-base text-muted">
+          We hit an unexpected error. Try again, or head back to the homepage.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={() => reset()}
-            className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-          >
-            Try Again
-          </button>
-
-          <Link
-            href="/"
-            className="px-6 py-3 bg-gray-800 hover:bg-gray-900 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-          >
-            Go Home
+        <div className="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button onClick={() => reset()}>Try Again</Button>
+          <Link href="/">
+            <Button variant="secondary" className="w-full">
+              Go Home
+            </Button>
           </Link>
         </div>
 
         {process.env.NODE_ENV === 'development' && (
-          <details className="mt-8 text-left max-w-2xl mx-auto">
-            <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+          <details className="mx-auto mt-8 max-w-2xl text-left">
+            <summary className="cursor-pointer text-sm text-muted hover:text-foreground">
               Error Details (Development)
             </summary>
-            <pre className="mt-2 p-4 bg-gray-800 text-red-400 rounded-lg text-xs overflow-auto">
+            <pre className="mt-2 overflow-auto rounded-xl border border-border bg-surface-2 p-4 text-xs text-danger">
               {error.message}
             </pre>
           </details>

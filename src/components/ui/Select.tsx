@@ -1,6 +1,7 @@
 'use client'
 
 import { SelectHTMLAttributes, forwardRef } from 'react'
+import { ChevronDown } from 'lucide-react'
 import clsx from 'clsx'
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
@@ -20,17 +21,23 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             {label}
           </label>
         )}
-        <select
-          ref={ref}
-          id={selectId}
-          className={clsx(
-            'rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand/40',
-            className,
-          )}
-          {...props}
-        >
-          {children}
-        </select>
+        <div className="relative">
+          <select
+            ref={ref}
+            id={selectId}
+            className={clsx(
+              'w-full appearance-none rounded-xl border border-border bg-surface-2 px-3 py-2 pr-9 text-sm text-foreground transition-colors focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand',
+              className,
+            )}
+            {...props}
+          >
+            {children}
+          </select>
+          <ChevronDown
+            size={15}
+            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted"
+          />
+        </div>
       </div>
     )
   },

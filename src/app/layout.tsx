@@ -3,6 +3,8 @@ import { Toaster } from 'react-hot-toast'
 import { ReactNode } from 'react'
 import { Metadata } from 'next'
 import Providers from '@/store/Providers'
+import { ThemeScript } from '@/components/theme/ThemeScript'
+import { AppHeader } from '@/components/layout/AppHeader'
 
 export const metadata: Metadata = {
   title: {
@@ -20,10 +22,38 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <Providers>
-      <html lang="en">
-        <head></head>
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <ThemeScript />
+        </head>
         <body suppressHydrationWarning className="antialiased">
-          <Toaster position="top-center" reverseOrder={false} />
+          <Toaster
+            position="top-center"
+            reverseOrder={false}
+            toastOptions={{
+              style: {
+                background: 'rgb(var(--surface))',
+                color: 'rgb(var(--foreground))',
+                border: '1px solid rgb(var(--border))',
+                boxShadow: 'var(--shadow-md)',
+                borderRadius: '0.75rem',
+                fontSize: '0.875rem',
+              },
+              success: {
+                iconTheme: {
+                  primary: 'rgb(var(--success))',
+                  secondary: 'rgb(var(--success-bg))',
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: 'rgb(var(--danger))',
+                  secondary: 'rgb(var(--danger-bg))',
+                },
+              },
+            }}
+          />
+          <AppHeader />
           {children}
         </body>
       </html>

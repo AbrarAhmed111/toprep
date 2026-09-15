@@ -4,24 +4,97 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Color tokens are stored as "R G B" triplets (no rgb()/hex) so Tailwind's
+ * opacity modifiers (bg-surface/80, border-border/50, ...) work correctly —
+ * see tailwind.config.ts, which wraps each one as rgb(var(--x) / <alpha>).
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --brand: #4f46e5;
-  --brand-foreground: #ffffff;
-  --surface: #f8fafc;
-  --border: #e2e8f0;
-  --muted: #64748b;
-  --success: #16a34a;
-  --warning: #d97706;
-  --danger: #dc2626;
+  --background: 250 243 230;
+  --foreground: 43 36 23;
+  --surface: 255 253 248;
+  --surface-2: 241 228 204;
+  --border: 232 215 184;
+  --muted: 138 122 95;
+  --brand: 201 100 66;
+  --brand-hover: 177 85 55;
+  --brand-foreground: 255 255 255;
+  --accent-teal: 79 143 124;
+  --success: 79 148 99;
+  --success-bg: 232 243 231;
+  --warning: 192 134 42;
+  --warning-bg: 250 240 220;
+  --danger: 193 72 61;
+  --danger-bg: 250 233 230;
+  --shadow-sm: 0 1px 2px rgba(43, 32, 20, 0.07);
+  --shadow-md:
+    0 6px 16px rgba(43, 32, 20, 0.09), 0 2px 5px rgba(43, 32, 20, 0.05);
+  --shadow-lg:
+    0 18px 40px rgba(43, 32, 20, 0.16), 0 6px 12px rgba(43, 32, 20, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --background: 27 22 15;
+    --foreground: 244 234 214;
+    --surface: 36 30 20;
+    --surface-2: 21 17 11;
+    --border: 61 51 34;
+    --muted: 176 160 133;
+    --brand: 229 138 99;
+    --brand-hover: 238 154 118;
+    --brand-foreground: 34 19 10;
+    --accent-teal: 127 184 165;
+    --success: 130 193 142;
+    --success-bg: 34 48 34;
+    --warning: 226 178 91;
+    --warning-bg: 51 41 19;
+    --danger: 227 139 126;
+    --danger-bg: 52 32 26;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55);
+  }
+}
+
+:root[data-theme='dark'] {
+  --background: 27 22 15;
+  --foreground: 244 234 214;
+  --surface: 36 30 20;
+  --surface-2: 21 17 11;
+  --border: 61 51 34;
+  --muted: 176 160 133;
+  --brand: 229 138 99;
+  --brand-hover: 238 154 118;
+  --brand-foreground: 34 19 10;
+  --accent-teal: 127 184 165;
+  --success: 130 193 142;
+  --success-bg: 34 48 34;
+  --warning: 226 178 91;
+  --warning-bg: 51 41 19;
+  --danger: 227 139 126;
+  --danger-bg: 52 32 26;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55);
+}
+
+html {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .no-scroll {
@@ -31,4 +104,47 @@ body {
 
 .no-scroll::-webkit-scrollbar {
   display: none !important; /* Hides scrollbar in Chrome, Safari, and Edge */
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slide-up {
+  animation: slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

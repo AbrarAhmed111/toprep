@@ -175,7 +175,7 @@ export function PreparationsDashboard() {
             type="checkbox"
             checked={showArchived}
             onChange={event => setShowArchived(event.target.checked)}
-            className="h-4 w-4 rounded border-border text-brand focus:ring-brand/40"
+            className="h-4 w-4 rounded border-border accent-brand focus:ring-2 focus:ring-brand"
           />
           Show archived
         </label>
