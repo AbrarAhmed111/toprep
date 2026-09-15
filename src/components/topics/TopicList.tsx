@@ -1,6 +1,7 @@
 'use client'
 
 import { ListChecks } from 'lucide-react'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 import {
   DndContext,
   DragEndEvent,
@@ -17,21 +18,31 @@ import {
 } from '@dnd-kit/sortable'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { Topic, TopicStatus } from '@/types/preparation'
+import { Section, Topic, TopicStatus } from '@/types/preparation'
 import { TopicRow } from './TopicRow'
 
 interface TopicListProps {
   topics: Topic[]
+  sections: Section[]
+  selectedTopicIds: string[]
+  emptyMessage?: string
+  onToggleSelect: (id: string) => void
   onRename: (id: string, name: string) => void
   onStatusChange: (id: string, status: TopicStatus) => void
+  onMoveToSection: (id: string, sectionId: string | null) => void
   onDelete: (id: string) => void
   onReorder: (orderedIds: string[]) => void
 }
 
 export function TopicList({
   topics,
+  sections,
+  selectedTopicIds,
+  emptyMessage,
+  onToggleSelect,
   onRename,
   onStatusChange,
+  onMoveToSection,
   onDelete,
   onReorder,
 }: TopicListProps) {
@@ -41,13 +52,17 @@ export function TopicList({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   )
+  const [animationParent] = useAutoAnimate({ duration: 350 })
 
   if (topics.length === 0) {
     return (
       <EmptyState
         icon={<ListChecks size={32} />}
         title="No topics yet"
-        description="Add your first topic above, or paste a list to add many at once."
+        description={
+          emptyMessage ??
+          'Add your first topic above, or paste a list to add many at once.'
+        }
       />
     )
   }
@@ -77,15 +92,23 @@ export function TopicList({
         strategy={verticalListSortingStrategy}
       >
         <Card className="overflow-hidden">
-          {topics.map(topic => (
-            <TopicRow
-              key={topic.id}
-              topic={topic}
-              onRename={name => onRename(topic.id, name)}
-              onStatusChange={status => onStatusChange(topic.id, status)}
-              onDelete={() => onDelete(topic.id)}
-            />
-          ))}
+          <div ref={animationParent}>
+            {topics.map(topic => (
+              <TopicRow
+                key={topic.id}
+                topic={topic}
+                sections={sections}
+                selected={selectedTopicIds.includes(topic.id)}
+                onToggleSelect={() => onToggleSelect(topic.id)}
+                onRename={name => onRename(topic.id, name)}
+                onStatusChange={status => onStatusChange(topic.id, status)}
+                onMoveToSection={sectionId =>
+                  onMoveToSection(topic.id, sectionId)
+                }
+                onDelete={() => onDelete(topic.id)}
+              />
+            ))}
+          </div>
         </Card>
       </SortableContext>
     </DndContext>

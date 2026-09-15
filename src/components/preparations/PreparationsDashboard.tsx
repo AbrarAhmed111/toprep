@@ -32,17 +32,16 @@ export function PreparationsDashboard() {
   const topics = useAppSelector(state => state.topics.items)
 
   const [query, setQuery] = useState('')
-  const [showArchived, setShowArchived] = useState(false)
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<Preparation | null>(null)
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return preparations
-      .filter(p => (showArchived ? true : p.status === 'active'))
-      .filter(p => (q ? p.title.toLowerCase().includes(q) : true))
-  }, [preparations, query, showArchived])
+    return preparations.filter(p =>
+      q ? p.title.toLowerCase().includes(q) : true,
+    )
+  }, [preparations, query])
 
   const topicStats = useMemo(() => {
     const stats = new Map<string, { total: number; completed: number }>()
@@ -83,7 +82,6 @@ export function PreparationsDashboard() {
           id: generateId(),
           ...values,
           targetDate: values.targetDate || null,
-          status: 'active',
           createdAt: now,
           updatedAt: now,
         }),
@@ -101,7 +99,6 @@ export function PreparationsDashboard() {
         ...preparation,
         id: newId,
         title: `${preparation.title} (Copy)`,
-        status: 'active',
         createdAt: now,
         updatedAt: now,
       }),
@@ -121,16 +118,6 @@ export function PreparationsDashboard() {
       )
     }
     toast.success('Preparation duplicated')
-  }
-
-  const handleToggleArchive = (preparation: Preparation) => {
-    dispatch(
-      preparationUpdated({
-        ...preparation,
-        status: preparation.status === 'archived' ? 'active' : 'archived',
-        updatedAt: new Date().toISOString(),
-      }),
-    )
   }
 
   const confirmDelete = () => {
@@ -156,29 +143,18 @@ export function PreparationsDashboard() {
         </Button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[220px]">
-          <SearchIcon
-            size={16}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-          />
-          <Input
-            aria-label="Search preparations"
-            placeholder="Search preparations..."
-            value={query}
-            onChange={event => setQuery(event.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <label className="flex items-center gap-2 text-sm text-muted">
-          <input
-            type="checkbox"
-            checked={showArchived}
-            onChange={event => setShowArchived(event.target.checked)}
-            className="h-4 w-4 rounded border-border accent-brand focus:ring-2 focus:ring-brand"
-          />
-          Show archived
-        </label>
+      <div className="relative min-w-[220px]">
+        <SearchIcon
+          size={16}
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+        />
+        <Input
+          aria-label="Search preparations"
+          placeholder="Search preparations..."
+          value={query}
+          onChange={event => setQuery(event.target.value)}
+          className="pl-9"
+        />
       </div>
 
       {!hydrated ? null : filtered.length === 0 ? (
@@ -192,7 +168,7 @@ export function PreparationsDashboard() {
           description={
             preparations.length === 0
               ? 'Create a preparation for an interview, exam, or certification to get started.'
-              : 'Try a different search or show archived preparations.'
+              : 'Try a different search.'
           }
           action={
             preparations.length === 0 ? (
@@ -218,7 +194,6 @@ export function PreparationsDashboard() {
                 completedCount={stats.completed}
                 onEdit={() => openEditForm(preparation)}
                 onDuplicate={() => handleDuplicate(preparation)}
-                onToggleArchive={() => handleToggleArchive(preparation)}
                 onDelete={() => setPendingDeleteId(preparation.id)}
               />
             )

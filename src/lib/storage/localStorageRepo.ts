@@ -3,6 +3,7 @@ const isBrowser = typeof window !== 'undefined'
 export const STORAGE_KEYS = {
   preparations: 'toprep:preparations',
   topics: 'toprep:topics',
+  sections: 'toprep:sections',
 } as const
 
 export function readCollection<T>(key: string): T[] {

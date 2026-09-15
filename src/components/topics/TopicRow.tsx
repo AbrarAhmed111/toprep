@@ -8,14 +8,21 @@ import { Select } from '@/components/ui/Select'
 import {
   TOPIC_STATUSES,
   TOPIC_STATUS_LABELS,
+  Section,
   Topic,
   TopicStatus,
 } from '@/types/preparation'
 
+const UNSECTIONED_VALUE = '__unsectioned__'
+
 interface TopicRowProps {
   topic: Topic
+  sections: Section[]
+  selected: boolean
+  onToggleSelect: () => void
   onRename: (name: string) => void
   onStatusChange: (status: TopicStatus) => void
+  onMoveToSection: (sectionId: string | null) => void
   onDelete: () => void
 }
 
@@ -28,8 +35,12 @@ const STATUS_DOT: Record<TopicStatus, string> = {
 
 export function TopicRow({
   topic,
+  sections,
+  selected,
+  onToggleSelect,
   onRename,
   onStatusChange,
+  onMoveToSection,
   onDelete,
 }: TopicRowProps) {
   const [isEditing, setIsEditing] = useState(false)
@@ -74,6 +85,14 @@ export function TopicRow({
         isDragging ? 'relative z-10 shadow-lg' : ''
       }`}
     >
+      <input
+        type="checkbox"
+        aria-label={`Select ${topic.name}`}
+        checked={selected}
+        onChange={onToggleSelect}
+        className="h-4 w-4 shrink-0 rounded border-border accent-brand focus:ring-2 focus:ring-brand"
+      />
+
       <button
         type="button"
         aria-label="Drag to reorder"
@@ -89,7 +108,7 @@ export function TopicRow({
         aria-hidden="true"
       />
 
-      <div className="min-w-[180px] flex-1">
+      <div className="min-w-[160px] flex-1">
         {isEditing ? (
           <div className="flex items-center gap-1">
             <input
@@ -144,6 +163,29 @@ export function TopicRow({
           ))}
         </Select>
       </div>
+
+      {sections.length > 0 && (
+        <div className="w-40">
+          <Select
+            aria-label="Section"
+            value={topic.sectionId ?? UNSECTIONED_VALUE}
+            onChange={event =>
+              onMoveToSection(
+                event.target.value === UNSECTIONED_VALUE
+                  ? null
+                  : event.target.value,
+              )
+            }
+          >
+            <option value={UNSECTIONED_VALUE}>Unsectioned</option>
+            {sections.map(section => (
+              <option key={section.id} value={section.id}>
+                {section.name}
+              </option>
+            ))}
+          </Select>
+        </div>
+      )}
 
       <button
         type="button"

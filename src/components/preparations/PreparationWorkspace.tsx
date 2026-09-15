@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { ArrowLeft, Pencil } from 'lucide-react'
@@ -13,13 +13,25 @@ import {
   topicsAddedMany,
   topicsReordered,
 } from '@/store/topics/topicsSlice'
+import {
+  sectionAdded,
+  sectionUpdated,
+  sectionRemoved,
+  sectionsReordered,
+} from '@/store/sections/sectionsSlice'
+import {
+  topicSelectionToggled,
+  topicSelectionSet,
+  topicSelectionCleared,
+} from '@/store/selection/selectionSlice'
 import { generateId } from '@/lib/id'
 import { parseBulkTopics } from '@/lib/topics/parseBulkTopics'
 import { Topic, TopicStatus } from '@/types/preparation'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { AddTopicPanel } from '@/components/topics/AddTopicPanel'
-import { TopicList } from '@/components/topics/TopicList'
+import { AiOrganizeButton } from '@/components/topics/AiOrganizeButton'
+import { SectionBoard } from '@/components/sections/SectionBoard'
 import {
   PreparationFormModal,
   PreparationFormValues,
@@ -40,6 +52,10 @@ export function PreparationWorkspace({
     state => state.preparations.hydrated,
   )
   const allTopics = useAppSelector(state => state.topics.items)
+  const allSections = useAppSelector(state => state.sections.items)
+  const selectedTopicIds = useAppSelector(
+    state => state.selection.selectedTopicIds,
+  )
   const [editOpen, setEditOpen] = useState(false)
 
   const topics = useMemo(
@@ -50,9 +66,31 @@ export function PreparationWorkspace({
     [allTopics, preparationId],
   )
 
-  const nextPosition = useMemo(
+  const sections = useMemo(
+    () =>
+      allSections
+        .filter(s => s.preparationId === preparationId)
+        .sort((a, b) => a.position - b.position),
+    [allSections, preparationId],
+  )
+
+  // Selection is ephemeral, shared Redux state — clear it whenever the
+  // workspace unmounts or the preparation changes so it never leaks
+  // between preparations.
+  useEffect(() => {
+    return () => {
+      dispatch(topicSelectionCleared())
+    }
+  }, [dispatch, preparationId])
+
+  const nextTopicPosition = useMemo(
     () => topics.reduce((max, t) => Math.max(max, t.position), -1) + 1,
     [topics],
+  )
+
+  const nextSectionPosition = useMemo(
+    () => sections.reduce((max, s) => Math.max(max, s.position), -1) + 1,
+    [sections],
   )
 
   const existingNames = useMemo(
@@ -60,9 +98,19 @@ export function PreparationWorkspace({
     [topics],
   )
 
+  const existingSectionNames = useMemo(
+    () => new Set(sections.map(s => s.name.toLowerCase())),
+    [sections],
+  )
+
   const completedCount = useMemo(
     () => topics.filter(t => t.status === 'completed').length,
     [topics],
+  )
+
+  const validSelectedTopicIds = useMemo(
+    () => selectedTopicIds.filter(id => topics.some(t => t.id === id)),
+    [selectedTopicIds, topics],
   )
 
   const addSingleTopic = (name: string) => {
@@ -79,7 +127,7 @@ export function PreparationWorkspace({
         name,
         status: 'need_to_study',
         notes: '',
-        position: nextPosition,
+        position: nextTopicPosition,
         aiExplanation: null,
         aiExpectedQuestions: [],
         selectedVideoIds: [],
@@ -110,7 +158,7 @@ export function PreparationWorkspace({
           name,
           status: 'need_to_study' as TopicStatus,
           notes: '',
-          position: nextPosition + index,
+          position: nextTopicPosition + index,
           aiExplanation: null,
           aiExpectedQuestions: [],
           selectedVideoIds: [],
@@ -140,10 +188,81 @@ export function PreparationWorkspace({
 
   const deleteTopic = (id: string) => {
     dispatch(topicRemoved(id))
+    dispatch(topicSelectionSet(validSelectedTopicIds.filter(sid => sid !== id)))
   }
 
   const reorderTopics = (orderedIds: string[]) => {
     dispatch(topicsReordered({ preparationId, orderedIds }))
+  }
+
+  const moveTopicToSection = (id: string, sectionId: string | null) => {
+    updateTopic(id, { sectionId })
+  }
+
+  const toggleSelectTopic = (id: string) => {
+    dispatch(topicSelectionToggled(id))
+  }
+
+  const selectManyTopics = (ids: string[], select: boolean) => {
+    const set = new Set(validSelectedTopicIds)
+    ids.forEach(id => (select ? set.add(id) : set.delete(id)))
+    dispatch(topicSelectionSet(Array.from(set)))
+  }
+
+  const selectAllInPreparation = () => {
+    dispatch(topicSelectionSet(topics.map(t => t.id)))
+  }
+
+  const clearSelection = () => {
+    dispatch(topicSelectionCleared())
+  }
+
+  const addSection = (name: string) => {
+    if (existingSectionNames.has(name.toLowerCase())) {
+      toast.error('A section with that name already exists')
+      return
+    }
+    const now = new Date().toISOString()
+    dispatch(
+      sectionAdded({
+        id: generateId(),
+        preparationId,
+        name,
+        position: nextSectionPosition,
+        createdAt: now,
+        updatedAt: now,
+      }),
+    )
+    toast.success(`Added section "${name}"`)
+  }
+
+  const renameSection = (id: string, name: string) => {
+    const section = sections.find(s => s.id === id)
+    if (!section) return
+    dispatch(
+      sectionUpdated({ ...section, name, updatedAt: new Date().toISOString() }),
+    )
+  }
+
+  const reorderSections = (orderedIds: string[]) => {
+    dispatch(sectionsReordered({ preparationId, orderedIds }))
+  }
+
+  const deleteSection = (id: string, deleteTopics: boolean) => {
+    const sectionTopics = topics.filter(t => t.sectionId === id)
+    for (const topic of sectionTopics) {
+      if (deleteTopics) dispatch(topicRemoved(topic.id))
+      else
+        dispatch(
+          topicUpdated({
+            ...topic,
+            sectionId: null,
+            updatedAt: new Date().toISOString(),
+          }),
+        )
+    }
+    dispatch(sectionRemoved(id))
+    toast.success('Section deleted')
   }
 
   const handleEditSubmit = (values: PreparationFormValues) => {
@@ -208,9 +327,6 @@ export function PreparationWorkspace({
                 Target: {new Date(preparation.targetDate).toLocaleDateString()}
               </Badge>
             )}
-            {preparation.status === 'archived' && (
-              <Badge tone="neutral">Archived</Badge>
-            )}
           </div>
         </div>
         <button
@@ -239,7 +355,38 @@ export function PreparationWorkspace({
         </div>
       )}
 
-      <AddTopicPanel onAddSingle={addSingleTopic} onAddBulk={addBulkTopics} />
+      <div className="flex flex-wrap items-center gap-2">
+        <AddTopicPanel onAddSingle={addSingleTopic} onAddBulk={addBulkTopics} />
+        <AiOrganizeButton
+          preparation={preparation}
+          topics={topics}
+          onApply={reorderTopics}
+        />
+      </div>
+
+      {validSelectedTopicIds.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm">
+          <span className="font-medium text-foreground">
+            {validSelectedTopicIds.length} selected
+          </span>
+          {validSelectedTopicIds.length < topics.length && (
+            <button
+              type="button"
+              onClick={selectAllInPreparation}
+              className="font-medium text-brand hover:underline"
+            >
+              Select all ({topics.length})
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={clearSelection}
+            className="font-medium text-muted hover:text-foreground hover:underline"
+          >
+            Clear
+          </button>
+        </div>
+      )}
 
       {topics.length > 1 && (
         <p className="-mb-2 text-xs text-muted">
@@ -247,12 +394,21 @@ export function PreparationWorkspace({
         </p>
       )}
 
-      <TopicList
+      <SectionBoard
+        sections={sections}
         topics={topics}
-        onRename={(id, name) => updateTopic(id, { name })}
-        onStatusChange={(id, status) => updateTopic(id, { status })}
-        onDelete={deleteTopic}
-        onReorder={reorderTopics}
+        selectedTopicIds={validSelectedTopicIds}
+        onToggleSelectTopic={toggleSelectTopic}
+        onSelectManyTopics={selectManyTopics}
+        onRenameTopic={(id, name) => updateTopic(id, { name })}
+        onStatusChangeTopic={(id, status) => updateTopic(id, { status })}
+        onMoveTopicToSection={moveTopicToSection}
+        onDeleteTopic={deleteTopic}
+        onReorderTopicsInGroup={reorderTopics}
+        onAddSection={addSection}
+        onRenameSection={renameSection}
+        onDeleteSection={deleteSection}
+        onReorderSections={reorderSections}
       />
 
       <PreparationFormModal

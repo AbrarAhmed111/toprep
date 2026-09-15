@@ -2,8 +2,6 @@
 
 import Link from 'next/link'
 import {
-  Archive,
-  ArchiveRestore,
   Award,
   ChevronRight,
   Copy,
@@ -30,7 +28,6 @@ interface PreparationCardProps {
   completedCount: number
   onEdit: () => void
   onDuplicate: () => void
-  onToggleArchive: () => void
   onDelete: () => void
 }
 
@@ -40,46 +37,32 @@ export function PreparationCard({
   completedCount,
   onEdit,
   onDuplicate,
-  onToggleArchive,
   onDelete,
 }: PreparationCardProps) {
-  const isArchived = preparation.status === 'archived'
   const TypeIcon = TYPE_ICON[preparation.type]
   const progress =
     topicCount > 0 ? Math.round((completedCount / topicCount) * 100) : 0
 
   return (
-    <Card
-      className={`group relative flex cursor-pointer flex-col gap-3 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-within:-translate-y-0.5 focus-within:shadow-md focus-within:ring-2 focus-within:ring-brand focus-within:ring-offset-2 focus-within:ring-offset-background ${
-        isArchived ? 'opacity-70' : ''
-      }`}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-brand">
-            <TypeIcon size={17} />
-          </span>
-          <h3 className="flex items-center gap-1 pt-1 text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-brand">
-            <Link
-              href={`/preparations/${preparation.id}`}
-              className="focus-visible:outline-none"
-            >
-              <span
-                className="absolute inset-0 rounded-2xl"
-                aria-hidden="true"
-              />
-              {preparation.title}
-            </Link>
-            <ChevronRight
-              size={15}
-              className="shrink-0 -translate-x-1 text-brand opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
-              aria-hidden="true"
-            />
-          </h3>
-        </div>
-        <Badge tone={isArchived ? 'neutral' : 'success'}>
-          {isArchived ? 'Archived' : 'Active'}
-        </Badge>
+    <Card className="group relative flex cursor-pointer flex-col gap-3 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-within:-translate-y-0.5 focus-within:shadow-md focus-within:ring-2 focus-within:ring-brand focus-within:ring-offset-2 focus-within:ring-offset-background">
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-brand">
+          <TypeIcon size={17} />
+        </span>
+        <h3 className="flex items-center gap-1 pt-1 text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-brand">
+          <Link
+            href={`/preparations/${preparation.id}`}
+            className="focus-visible:outline-none"
+          >
+            <span className="absolute inset-0 rounded-2xl" aria-hidden="true" />
+            {preparation.title}
+          </Link>
+          <ChevronRight
+            size={15}
+            className="shrink-0 -translate-x-1 text-brand opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
+            aria-hidden="true"
+          />
+        </h3>
       </div>
 
       {preparation.description && (
@@ -128,16 +111,6 @@ export function PreparationCard({
           className="rounded-lg p-2 text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
         >
           <Copy size={16} />
-        </button>
-        <button
-          type="button"
-          onClick={onToggleArchive}
-          aria-label={
-            isArchived ? 'Unarchive preparation' : 'Archive preparation'
-          }
-          className="rounded-lg p-2 text-muted transition-colors hover:bg-surface-2 hover:text-foreground"
-        >
-          {isArchived ? <ArchiveRestore size={16} /> : <Archive size={16} />}
         </button>
         <button
           type="button"

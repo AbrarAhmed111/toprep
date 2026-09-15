@@ -4,11 +4,15 @@ import { combineReducers } from 'redux'
 import sampleReducer from './sample/SampleSlice'
 import preparationsReducer from './preparations/preparationsSlice'
 import topicsReducer from './topics/topicsSlice'
+import sectionsReducer from './sections/sectionsSlice'
+import selectionReducer from './selection/selectionSlice'
 
 const rootReducer = combineReducers({
   sampleData: sampleReducer,
   preparations: preparationsReducer,
   topics: topicsReducer,
+  sections: sectionsReducer,
+  selection: selectionReducer,
 })
 
 const store = configureStore({
