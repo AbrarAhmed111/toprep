@@ -37,3 +37,4 @@ next-env.d.ts
 
 # product docs (not part of the source tree)
 /doc
+/toprep-llm-youtube
