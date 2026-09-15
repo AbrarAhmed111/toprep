@@ -1,11 +1,24 @@
 'use client'
 
 import { useState } from 'react'
-import { Trash2, Pencil, Check, X, Zap } from 'lucide-react'
+import { Trash2, Pencil, Check, X, Zap, CheckCircle2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Topic, TopicStatus, TOPIC_STATUS_LABELS } from '@/types/preparation'
 import { TopicYouTubeSearchRedesigned } from '@/components/youtube/TopicYouTubeSearchRedesigned'
 import { generateTopicExplanation, generateExpectedQuestions } from '@/lib/api/aiService'
+
+// Loader component
+function AnimatedLoader() {
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex gap-1">
+        <div className="h-2 w-2 rounded-full bg-current opacity-40 animate-pulse" style={{ animationDelay: '0ms' }} />
+        <div className="h-2 w-2 rounded-full bg-current opacity-60 animate-pulse" style={{ animationDelay: '150ms' }} />
+        <div className="h-2 w-2 rounded-full bg-current opacity-100 animate-pulse" style={{ animationDelay: '300ms' }} />
+      </div>
+    </div>
+  )
+}
 
 interface TopicContainerProps {
   topic: Topic
@@ -171,20 +184,56 @@ export function TopicContainer({
                   <button
                     onClick={handleGenerateExplanation}
                     disabled={isGeneratingExplanation}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Generate explanation"
+                    className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      topic.aiExplanation
+                        ? 'border-success/30 bg-success/5 text-success hover:bg-success/10'
+                        : 'border-border bg-surface text-foreground hover:bg-surface-2'
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    title={topic.aiExplanation ? 'Explanation generated' : 'Generate explanation'}
                   >
-                    <Zap size={14} />
-                    {isGeneratingExplanation ? 'Explaining...' : 'Explain'}
+                    {isGeneratingExplanation ? (
+                      <>
+                        <AnimatedLoader />
+                        <span>Explaining...</span>
+                      </>
+                    ) : topic.aiExplanation ? (
+                      <>
+                        <CheckCircle2 size={14} />
+                        <span>Explained</span>
+                      </>
+                    ) : (
+                      <>
+                        <Zap size={14} />
+                        <span>Explain</span>
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={handleGenerateQuestions}
                     disabled={isGeneratingQuestions}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Generate questions"
+                    className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      topic.aiExpectedQuestions && topic.aiExpectedQuestions.length > 0
+                        ? 'border-success/30 bg-success/5 text-success hover:bg-success/10'
+                        : 'border-border bg-surface text-foreground hover:bg-surface-2'
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    title={topic.aiExpectedQuestions && topic.aiExpectedQuestions.length > 0 ? 'Questions generated' : 'Generate questions'}
                   >
-                    <Zap size={14} />
-                    {isGeneratingQuestions ? 'Asking...' : 'Questions'}
+                    {isGeneratingQuestions ? (
+                      <>
+                        <AnimatedLoader />
+                        <span>Asking...</span>
+                      </>
+                    ) : topic.aiExpectedQuestions && topic.aiExpectedQuestions.length > 0 ? (
+                      <>
+                        <CheckCircle2 size={14} />
+                        <span>Questioned</span>
+                      </>
+                    ) : (
+                      <>
+                        <Zap size={14} />
+                        <span>Questions</span>
+                      </>
+                    )}
                   </button>
                 </>
               )}
@@ -199,25 +248,52 @@ export function TopicContainer({
               </button>
             </div>
 
-            {/* Generated Content Display */}
+            {/* Generated Content Display with Animations */}
             {topic.aiExplanation && (
-              <div className="mt-3 rounded-lg border border-border/40 bg-surface/50 p-3">
-                <p className="text-sm text-foreground leading-relaxed">
-                  {topic.aiExplanation}
-                </p>
+              <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-500">
+                <div className="rounded-lg border border-brand/20 bg-brand/5 p-3">
+                  <p className="text-sm text-foreground leading-relaxed">
+                    {topic.aiExplanation}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {isGeneratingExplanation && (
+              <div className="mt-3 animate-pulse">
+                <div className="rounded-lg border border-border/40 bg-surface/50 p-3 space-y-2">
+                  <div className="h-3 bg-border/30 rounded w-3/4" />
+                  <div className="h-3 bg-border/30 rounded w-1/2" />
+                </div>
               </div>
             )}
 
             {topic.aiExpectedQuestions && topic.aiExpectedQuestions.length > 0 && (
-              <div className="mt-3 rounded-lg border border-border/40 bg-surface/50 p-3">
-                <ul className="space-y-1.5 text-sm text-foreground">
-                  {topic.aiExpectedQuestions.map((question, idx) => (
-                    <li key={idx} className="flex gap-2.5">
-                      <span className="shrink-0 font-medium text-muted">{idx + 1}.</span>
-                      <span>{question}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-500">
+                <div className="rounded-lg border border-brand/20 bg-brand/5 p-3">
+                  <ul className="space-y-2 text-sm text-foreground">
+                    {topic.aiExpectedQuestions.map((question, idx) => (
+                      <li
+                        key={idx}
+                        className="flex gap-2.5 animate-in fade-in slide-in-from-left-2 duration-500"
+                        style={{ animationDelay: `${idx * 100}ms` }}
+                      >
+                        <span className="shrink-0 font-medium text-brand">{idx + 1}.</span>
+                        <span>{question}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {isGeneratingQuestions && (
+              <div className="mt-3 animate-pulse">
+                <div className="rounded-lg border border-border/40 bg-surface/50 p-3 space-y-2">
+                  <div className="h-3 bg-border/30 rounded w-full" />
+                  <div className="h-3 bg-border/30 rounded w-5/6" />
+                  <div className="h-3 bg-border/30 rounded w-4/5" />
+                </div>
               </div>
             )}
           </div>
