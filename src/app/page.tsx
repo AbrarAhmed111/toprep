@@ -10,36 +10,60 @@ const features = [
     description:
       'Upload your study materials. AI intelligently extracts and organizes topics in the correct learning order automatically.',
     highlight: true,
+    bgGradient: 'from-blue-500/20 to-purple-500/20',
+    borderColor: 'border-blue-500/50',
+    iconBg: 'from-blue-500 to-purple-600',
+    iconColor: 'text-white'
   },
   {
     icon: Youtube,
     title: 'Watch Videos Directly',
     description:
       'Search and watch YouTube videos right within each topic. No switching tabs, no distractions—learn in context.',
+    bgGradient: 'from-red-500/10 to-red-600/5',
+    borderColor: 'border-red-500/30',
+    iconBg: 'bg-red-600',
+    iconColor: 'text-white'
   },
   {
     icon: Brain,
     title: 'AI Explanations',
     description:
       'Get concise, beginner-friendly explanations for any topic powered by multiple AI providers with automatic fallback.',
+    bgGradient: 'from-purple-500/10 to-pink-500/5',
+    borderColor: 'border-purple-500/30',
+    iconBg: 'bg-purple-600',
+    iconColor: 'text-white'
   },
   {
     icon: CheckCircle2,
     title: 'Expected Questions',
     description:
       'AI generates realistic interview or exam questions for each topic. Practice with what actually matters.',
+    bgGradient: 'from-emerald-500/10 to-teal-500/5',
+    borderColor: 'border-emerald-500/30',
+    iconBg: 'bg-emerald-600',
+    iconColor: 'text-white'
   },
   {
     icon: Zap,
     title: 'Smart Organization',
     description:
       'AI suggests optimal section groupings and learning sequences. Reorganize topics with a single click.',
+    bgGradient: 'from-amber-500/10 to-orange-500/5',
+    borderColor: 'border-amber-500/30',
+    iconBg: 'bg-amber-600',
+    iconColor: 'text-white'
   },
   {
     icon: CheckCircle2,
     title: 'Track Progress',
     description:
       'Mark topics as understood, completed, or skipping. Keep track of your preparation journey at a glance.',
+    bgGradient: 'from-cyan-500/10 to-blue-500/5',
+    borderColor: 'border-cyan-500/30',
+    iconBg: 'bg-cyan-600',
+    iconColor: 'text-white'
   },
 ]
 
@@ -181,21 +205,13 @@ export default function Home() {
           {features.map(feature => (
             <Card
               key={feature.title}
-              className={`relative overflow-hidden border-2 p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-                feature.highlight
-                  ? 'border-blue-500/50 bg-gradient-to-br from-blue-500/10 to-purple-500/10'
-                  : 'border-slate-700 bg-slate-800/30'
-              }`}
+              className={`relative overflow-hidden border-2 p-6 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:shadow-xl bg-gradient-to-br ${feature.bgGradient} ${feature.borderColor}`}
             >
               {feature.highlight && (
                 <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-blue-500/20 blur-3xl" />
               )}
               <div className="relative">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${
-                  feature.highlight
-                    ? 'bg-gradient-to-br from-blue-500 to-purple-600'
-                    : 'bg-slate-700'
-                } text-white`}>
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${feature.iconBg} ${feature.iconColor}`}>
                   <feature.icon size={24} />
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-white">
