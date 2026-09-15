@@ -26,6 +26,7 @@ import {
 } from '@/store/selection/selectionSlice'
 import { generateId } from '@/lib/id'
 import { parseBulkTopics } from '@/lib/topics/parseBulkTopics'
+import { TopicOrganizeResult } from '@/lib/api/topicOrganizer'
 import { Topic, TopicStatus } from '@/types/preparation'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -195,6 +196,72 @@ export function PreparationWorkspace({
     dispatch(topicsReordered({ preparationId, orderedIds }))
   }
 
+  // Applies an AI organize result: creates any new sections the AI
+  // introduced, reassigns each topic to its suggested section (reusing an
+  // existing section when the name matches, case-insensitively), and sets
+  // the new order — all in one synchronous pass so React batches it into a
+  // single re-render and the whole board reflows in one animation.
+  const applyAiOrganization = (result: TopicOrganizeResult) => {
+    const now = new Date().toISOString()
+    const sectionIdByName = new Map(
+      sections.map(s => [s.name.toLowerCase(), s.id]),
+    )
+
+    const newSectionNames: string[] = []
+    for (const assignment of result.section_assignments) {
+      const name = assignment.section_name?.trim()
+      if (!name) continue
+      const key = name.toLowerCase()
+      if (
+        !sectionIdByName.has(key) &&
+        !newSectionNames.some(n => n.toLowerCase() === key)
+      ) {
+        newSectionNames.push(name)
+      }
+    }
+
+    let position = nextSectionPosition
+    for (const name of newSectionNames) {
+      const id = generateId()
+      dispatch(
+        sectionAdded({
+          id,
+          preparationId,
+          name,
+          position: position++,
+          createdAt: now,
+          updatedAt: now,
+        }),
+      )
+      sectionIdByName.set(name.toLowerCase(), id)
+    }
+
+    const sectionIdByTopicId = new Map<string, string | null>()
+    for (const assignment of result.section_assignments) {
+      const name = assignment.section_name?.trim()
+      sectionIdByTopicId.set(
+        assignment.topic_id,
+        name ? (sectionIdByName.get(name.toLowerCase()) ?? null) : null,
+      )
+    }
+
+    result.ordered_topic_ids.forEach((topicId, index) => {
+      const topic = topics.find(t => t.id === topicId)
+      if (!topic) return
+      const nextSectionId = sectionIdByTopicId.has(topicId)
+        ? (sectionIdByTopicId.get(topicId) ?? null)
+        : topic.sectionId
+      dispatch(
+        topicUpdated({
+          ...topic,
+          position: index,
+          sectionId: nextSectionId,
+          updatedAt: now,
+        }),
+      )
+    })
+  }
+
   const moveTopicToSection = (id: string, sectionId: string | null) => {
     updateTopic(id, { sectionId })
   }
@@ -355,14 +422,7 @@ export function PreparationWorkspace({
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2">
-        <AddTopicPanel onAddSingle={addSingleTopic} onAddBulk={addBulkTopics} />
-        <AiOrganizeButton
-          preparation={preparation}
-          topics={topics}
-          onApply={reorderTopics}
-        />
-      </div>
+      <AddTopicPanel onAddSingle={addSingleTopic} onAddBulk={addBulkTopics} />
 
       {validSelectedTopicIds.length > 0 && (
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm">
@@ -389,9 +449,17 @@ export function PreparationWorkspace({
       )}
 
       {topics.length > 1 && (
-        <p className="-mb-2 text-xs text-muted">
-          Drag the handle on the left of a topic to reorder it.
-        </p>
+        <div className="-mb-2 flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs text-muted">
+            Drag the handle on the left of a topic to reorder it.
+          </p>
+          <AiOrganizeButton
+            preparation={preparation}
+            topics={topics}
+            sections={sections}
+            onApply={applyAiOrganization}
+          />
+        </div>
       )}
 
       <SectionBoard

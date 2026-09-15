@@ -4,19 +4,21 @@ import { useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/Button'
-import { organizeTopics } from '@/lib/api/topicOrganizer'
+import { organizeTopics, TopicOrganizeResult } from '@/lib/api/topicOrganizer'
 import { BackendApiError } from '@/lib/api/backendClient'
-import { Preparation, Topic } from '@/types/preparation'
+import { Preparation, Section, Topic } from '@/types/preparation'
 
 interface AiOrganizeButtonProps {
   preparation: Preparation
   topics: Topic[]
-  onApply: (orderedIds: string[]) => void
+  sections: Section[]
+  onApply: (result: TopicOrganizeResult) => void
 }
 
 export function AiOrganizeButton({
   preparation,
   topics,
+  sections,
   onApply,
 }: AiOrganizeButtonProps) {
   const [loading, setLoading] = useState(false)
@@ -24,41 +26,19 @@ export function AiOrganizeButton({
   const run = async () => {
     if (loading) return
     setLoading(true)
-    const previousOrder = topics.map(t => t.id)
 
     try {
       const data = await organizeTopics({
         preparationTitle: preparation.title,
         preparationType: preparation.type,
         topics: topics.map(t => ({ id: t.id, name: t.name })),
+        sections: sections.map(s => ({ id: s.id, name: s.name })),
       })
 
-      // Apply immediately — the reorder animates into place, so the
-      // reflow itself is the feedback. No approve/reject step.
-      onApply(data.ordered_topic_ids)
-
-      toast.success(
-        toastInstance => (
-          <span className="flex items-center gap-3">
-            <span>
-              {data.reasoning
-                ? `Reordered — ${data.reasoning}`
-                : 'Topics reordered by AI'}
-            </span>
-            <button
-              type="button"
-              onClick={() => {
-                onApply(previousOrder)
-                toast.dismiss(toastInstance.id)
-              }}
-              className="shrink-0 font-semibold text-brand underline underline-offset-2"
-            >
-              Undo
-            </button>
-          </span>
-        ),
-        { duration: 6000 },
-      )
+      // Apply immediately — the reorder/regroup animates into place, so
+      // the reflow itself is the feedback. No approve/reject step, no
+      // success toast.
+      onApply(data)
     } catch (err) {
       const message =
         err instanceof BackendApiError
