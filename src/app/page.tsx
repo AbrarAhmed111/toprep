@@ -33,7 +33,7 @@ const YouTubeLogo = () => (
   <img
     src="https://img.magnific.com/premium-vector/youtube-app-round-icon-social-media-logo-vector-illustration_277909-797.jpg?semt=ais_hybrid&w=740&q=80"
     alt="YouTube"
-    className="w-8 h-8 object-contain"
+    className="w-full rounded-lg h-full"
   />
 )
 
@@ -183,7 +183,7 @@ export default function Home() {
         <div className="flex flex-col items-center gap-4 mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
               <Sparkles size={16} className="text-brand" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-brand">Features</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-brand">LLM Providers</span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-bold text-center text-foreground max-w-3xl">
                Powered by Industry-Leading AI
