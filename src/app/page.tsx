@@ -3,53 +3,37 @@ import { BookOpen, Sparkles, Youtube, FileText, Brain, Lightbulb } from 'lucide-
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 
-// AI Provider Logo Components - Professional Branding
+// AI Provider Logo Components - Using Official Brand Images
 const ClaudeLogo = () => (
-  <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
-    <defs>
-      <linearGradient id="claude-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#9D7BE0" />
-        <stop offset="100%" stopColor="#5B4B9A" />
-      </linearGradient>
-    </defs>
-    <circle cx="50" cy="50" r="48" fill="url(#claude-grad)"/>
-    <text x="50" y="65" fontSize="50" fontWeight="bold" fill="white" textAnchor="middle" fontFamily="Arial">C</text>
-  </svg>
+  <img
+    src="https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Claude_AI_symbol.svg/1280px-Claude_AI_symbol.svg.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail"
+    alt="Claude"
+    className="w-8 h-8 object-contain"
+  />
 )
 
 const GPTLogo = () => (
-  <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
-    <defs>
-      <linearGradient id="gpt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#10A37F" />
-        <stop offset="100%" stopColor="#0D7F5F" />
-      </linearGradient>
-    </defs>
-    <circle cx="50" cy="50" r="48" fill="url(#gpt-grad)"/>
-    <text x="50" y="62" fontSize="35" fontWeight="bold" fill="white" textAnchor="middle" fontFamily="Arial">GPT</text>
-  </svg>
+  <img
+    src="https://static.vecteezy.com/system/resources/previews/021/059/825/non_2x/chatgpt-logo-chat-gpt-icon-on-green-background-free-vector.jpg"
+    alt="GPT"
+    className="w-8 h-8 object-contain"
+  />
 )
 
 const GeminiLogo = () => (
-  <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
-    <defs>
-      <linearGradient id="gemini-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#4285F4" />
-        <stop offset="33%" stopColor="#EA4335" />
-        <stop offset="66%" stopColor="#FBBC04" />
-        <stop offset="100%" stopColor="#34A853" />
-      </linearGradient>
-    </defs>
-    <circle cx="50" cy="50" r="48" fill="url(#gemini-grad)"/>
-    <text x="50" y="65" fontSize="45" fontWeight="bold" fill="white" textAnchor="middle" fontFamily="Arial">G</text>
-  </svg>
+  <img
+    src="https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/gemini-color.png"
+    alt="Gemini"
+    className="w-8 h-8 object-contain"
+  />
 )
 
 const YouTubeLogo = () => (
-  <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
-    <circle cx="50" cy="50" r="48" fill="#FF0000"/>
-    <polygon points="40,30 40,70 70,50" fill="white"/>
-  </svg>
+  <img
+    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqKweOmL0sCXzCDo4pd2RgiRUvniaVvfMIwt1t4RHtKA&s=10"
+    alt="YouTube"
+    className="w-8 h-8 object-contain"
+  />
 )
 
 const features = [
