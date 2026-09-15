@@ -126,23 +126,30 @@ export default function Home() {
           <h2 className="mb-8 text-2xl font-bold text-foreground text-center">
             Everything You Need to Succeed
           </h2>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            {features.map(feature => (
-              <Card
-                key={feature.title}
-                className="p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:border-brand/50 flex flex-col items-center text-center"
-              >
-                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-2 border-2 border-border/50 ${feature.color} transition-all duration-300`}>
-                  <feature.icon size={24} strokeWidth={1.5} />
-                </div>
-                <h3 className="mt-4 text-sm font-bold text-foreground leading-tight">
-                  {feature.title}
-                </h3>
-                <p className="mt-3 text-xs leading-relaxed text-muted line-clamp-3">
-                  {feature.description}
-                </p>
-              </Card>
-            ))}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            {features.map(feature => {
+              const isVideoLearning = feature.title === 'Video Learning'
+              return (
+                <Card
+                  key={feature.title}
+                  className="p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:border-brand/50 flex flex-col items-center text-center min-h-72"
+                >
+                  <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-2 border-2 border-border/50 ${feature.color} transition-all duration-300`}>
+                    {isVideoLearning ? (
+                      <YouTubeLogo />
+                    ) : (
+                      <feature.icon size={28} strokeWidth={1.5} />
+                    )}
+                  </div>
+                  <h3 className="mt-5 text-base font-bold text-foreground leading-tight">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-relaxed text-muted line-clamp-4">
+                    {feature.description}
+                  </p>
+                </Card>
+              )
+            })}
           </div>
         </div>
 
