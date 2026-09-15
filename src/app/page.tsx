@@ -3,39 +3,52 @@ import { BookOpen, Sparkles, Youtube, FileText, Brain, Lightbulb } from 'lucide-
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 
-// AI Provider Logo Components
+// AI Provider Logo Components - Professional Branding
 const ClaudeLogo = () => (
-  <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
-    <circle cx="12" cy="12" r="10" fill="#FF9D00"/>
-    <path d="M12 6C8.68 6 6 8.68 6 12s2.68 6 6 6 6-2.68 6-6-2.68-6-6-6z" fill="#fff" opacity="0.3"/>
+  <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
+    <defs>
+      <linearGradient id="claude-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#9D7BE0" />
+        <stop offset="100%" stopColor="#5B4B9A" />
+      </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="48" fill="url(#claude-grad)"/>
+    <text x="50" y="65" fontSize="50" fontWeight="bold" fill="white" textAnchor="middle" fontFamily="Arial">C</text>
   </svg>
 )
 
 const GPTLogo = () => (
-  <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
-    <circle cx="12" cy="12" r="10" fill="#00A67E"/>
-    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" fill="#fff" opacity="0.4"/>
+  <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
+    <defs>
+      <linearGradient id="gpt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#10A37F" />
+        <stop offset="100%" stopColor="#0D7F5F" />
+      </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="48" fill="url(#gpt-grad)"/>
+    <text x="50" y="62" fontSize="35" fontWeight="bold" fill="white" textAnchor="middle" fontFamily="Arial">GPT</text>
   </svg>
 )
 
 const GeminiLogo = () => (
-  <svg viewBox="0 0 24 24" className="w-8 h-8">
+  <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
     <defs>
       <linearGradient id="gemini-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style={{ stopColor: '#4285F4', stopOpacity: 1 }} />
-        <stop offset="50%" style={{ stopColor: '#EA4335', stopOpacity: 1 }} />
-        <stop offset="100%" style={{ stopColor: '#FBBC04', stopOpacity: 1 }} />
+        <stop offset="0%" stopColor="#4285F4" />
+        <stop offset="33%" stopColor="#EA4335" />
+        <stop offset="66%" stopColor="#FBBC04" />
+        <stop offset="100%" stopColor="#34A853" />
       </linearGradient>
     </defs>
-    <circle cx="12" cy="12" r="10" fill="url(#gemini-grad)"/>
-    <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" fill="#fff" opacity="0.3"/>
+    <circle cx="50" cy="50" r="48" fill="url(#gemini-grad)"/>
+    <text x="50" y="65" fontSize="45" fontWeight="bold" fill="white" textAnchor="middle" fontFamily="Arial">G</text>
   </svg>
 )
 
 const YouTubeLogo = () => (
-  <svg viewBox="0 0 24 24" className="w-8 h-8" fill="currentColor">
-    <circle cx="12" cy="12" r="10" fill="#FF0000"/>
-    <polygon points="10,8 10,16 16,12" fill="#fff"/>
+  <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
+    <circle cx="50" cy="50" r="48" fill="#FF0000"/>
+    <polygon points="40,30 40,70 70,50" fill="white"/>
   </svg>
 )
 
