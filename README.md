@@ -14,23 +14,26 @@ along the way.
 
 ## What ToPrep does
 
-- Organizes topics into a clear, navigable structure (Preparations → Sections →
-  Topics)
-- Finds relevant YouTube videos for each topic, individually or across many
-  topics at once
-- Lets you select, reject, and filter/sort videos per topic
-- Generates a short (2–3 line) AI explanation for each topic
-- Generates a small set of AI expected questions per topic
-- Suggests an effective learning order across topics — you review and explicitly
-  accept it
-- Supports lightweight personal notes per topic
-- Tracks what's been studied and what remains
-- Works fully as a guest (local storage) with optional accounts for cloud sync
-  across devices
+### ✅ Fully Implemented Features
+- ✅ **Organizes topics** into clear structure (Preparations → Sections → Topics)
+- ✅ **YouTube Integration** - Search and discover videos per topic or globally
+- ✅ **Video Management** - Select, reject, filter by duration/views, sort by relevance/newest
+- ✅ **AI Explanations** - Get 2–3 line summaries via Claude, GPT, or Gemini
+- ✅ **Practice Questions** - AI-generated expected interview/exam questions
+- ✅ **Topic Organization** - AI-suggested optimal learning order with explanation
+- ✅ **Personal Notes** - Lightweight notes per topic
+- ✅ **Status Tracking** - Track progress (need to study, understood, completed, skipping)
+- ✅ **Theme Support** - Light and dark theme with consistent color system
+- ✅ **Guest & Cloud Mode** - Local storage for guests, cloud sync with accounts
 
+### Philosophy
 ToPrep is intentionally **not** an AI-first app, AI tutor, agent, or RAG-powered
-search engine. AI is a scoped, supporting feature limited to three capabilities:
+search engine. AI is a scoped, supporting feature limited to three key capabilities:
 topic ordering, short explanations, and expected questions.
+
+### Backend Integration
+All AI operations (explanations, questions, topic ordering) are powered by the
+**toprep-llm-youtube** backend service with automatic provider failover (Claude → GPT → Gemini).
 
 ## Core data hierarchy
 
@@ -88,18 +91,27 @@ The build is broken into ten sequential phases, from foundations through launch:
 | 8     | Dashboard                                              |
 | 9     | QA, Hardening & Launch                                 |
 
-This repository currently completes **Phase 0** (foundations, design
-tokens/components, CI) and **Phase 1** (guest-mode Preparation & Topic CRUD,
-backed by local storage). Phase 2 onward — sections, drag-and-drop ordering,
-YouTube search, and AI features — is not yet implemented.
+This repository currently completes **Phase 0** through **Phase 6**:
+- **Phase 0** - Foundations, design tokens/components, CI
+- **Phase 1** - Guest-mode Preparation & Topic CRUD (local storage)
+- **Phase 2** - Topic organization with sections and AI-suggested ordering
+- **Phase 3** - YouTube integration (search, filtering, sorting, selection)
+- **Phase 4** - Advanced search filters and sorting options
+- **Phase 5** - AI features (topic explanations via Claude/GPT/Gemini, expected questions)
+- **Phase 6** - Topic workspace with notes and AI-powered assistance
+
+Phases 7+ (Authentication, Cloud Sync, Dashboard refinements) are planned for future releases.
 
 ## Tech stack
 
 - **Next.js 15** (App Router) + **TypeScript**
 - **Supabase** — SSR-safe clients, auth middleware, session helpers
-- **Tailwind CSS** for styling
-- **Redux Toolkit** for state management
+- **Tailwind CSS** for styling with CSS variables and theme support
+- **React** hooks and state management
 - **ESLint + Prettier + Jest** for linting, formatting, and testing
+- **AI Providers** - Claude (Anthropic), GPT (OpenAI), Gemini (Google) via backend gateway
+- **YouTube Integration** - Dynamic video search and content discovery
+- **Lucide React** - Modern icon library
 
 ## Directory structure
 
@@ -117,9 +129,13 @@ src/
 │   └── css/
 │       └── globals.css            # Design tokens (CSS variables)
 ├── components/
-│   ├── ui/                        # Design system: Button, Input, Modal, Badge, etc.
+│   ├── ui/                        # Design system: Button, Input, Modal, Badge, Card, etc.
+│   ├── layout/                    # App header, navigation, theme toggle
+│   ├── theme/                     # Theme provider, toggle component
 │   ├── preparations/               # Preparation dashboard, card, form, workspace
-│   ├── topics/                     # Topic list/row, single + bulk add
+│   ├── sections/                   # Section management, organization
+│   ├── topics/                     # Topic list, container, AI buttons for explanations/questions
+│   ├── youtube/                    # YouTube search modal, video cards, filters
 │   └── guards/
 │       └── AuthGate.tsx            # Client-side auth gate (optional)
 ├── lib/
@@ -147,24 +163,44 @@ and is gitignored — it isn't tracked in this repository.
 
 ## Environment variables
 
-Copy `.env.example` to `.env.local` and fill in the Supabase values (required
-for Phase 7 authentication; not needed for the current guest-mode features):
+Copy `.env.example` to `.env.local` and configure:
 
+### Supabase (Optional - for cloud sync & authentication)
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 ```
 
-The YouTube and AI provider keys in `.env.example` are placeholders for Phases
-2/3/5 and aren't required yet.
+### Backend API (Required for AI features)
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+```
+
+### YouTube (Required for video search)
+```env
+NEXT_PUBLIC_YOUTUBE_API_KEY=your_youtube_data_api_key
+```
+
+Note: The backend service (toprep-llm-youtube) handles all LLM API keys (Claude, GPT, Gemini)
+via its own `.env` configuration. The frontend communicates with the backend gateway.
 
 ## Getting started
 
+### Prerequisites
+- **Backend Service**: The AI features require the **toprep-llm-youtube** backend running
+  - Clone/navigate to `toprep-llm-youtube/`
+  - Follow its README to start the backend on `http://localhost:8000`
+  - Configure API keys for your chosen LLM providers (Claude, GPT, Gemini)
+
+### Frontend Setup
 ```bash
 npm install
 npm run dev
 # visit http://localhost:3000
 ```
+
+**Note**: Video search and AI features work best when the backend service is running.
+Guest mode (local storage) works without the backend.
 
 ## Scripts
 
