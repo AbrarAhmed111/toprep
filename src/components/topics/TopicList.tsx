@@ -20,26 +20,6 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Section, Topic, TopicStatus, Preparation } from '@/types/preparation'
 import { TopicContainer } from './TopicContainer'
 
-// Shimmer animation for organized topics
-const shimmerStyle = `
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-  }
-  .topic-shimmer {
-    animation: shimmer 2s ease-in-out;
-  }
-`
-
 interface TopicListProps {
   topics: Topic[]
   sections: Section[]
@@ -120,35 +100,58 @@ export function TopicList({
           />
         ) : (
           <>
-            <style>{shimmerStyle}</style>
+            {justReorganized && (
+              <style>{`
+                @keyframes shimmer {
+                  0% { transform: translateX(-100%); opacity: 0; }
+                  50% { opacity: 1; }
+                  100% { transform: translateX(100%); opacity: 0; }
+                }
+                .topic-shimmer {
+                  animation: shimmer 2s ease-in-out;
+                }
+              `}</style>
+            )}
             {topics.map((topic, index) => (
-              <div
-                key={topic.id}
-                className={justReorganized ? "relative animate-in fade-in slide-in-from-left-4 duration-500" : "relative"}
-                style={justReorganized ? {
-                  animationDelay: `${index * 75}ms`,
-                } : {}}
-              >
-                {/* Shimmer overlay effect - only on reorganization */}
-                {justReorganized && (
+              <div key={topic.id}>
+                {justReorganized ? (
                   <div
-                    className="absolute inset-0 rounded-2xl pointer-events-none topic-shimmer"
+                    className="relative animate-in fade-in slide-in-from-left-4 duration-500"
                     style={{
-                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-                      animationDelay: `${index * 75 + 100}ms`,
+                      animationDelay: `${index * 75}ms`,
                     }}
+                  >
+                    {/* Shimmer overlay effect - only on reorganization */}
+                    <div
+                      className="absolute inset-0 rounded-2xl pointer-events-none topic-shimmer"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                        animationDelay: `${index * 75 + 100}ms`,
+                      }}
+                    />
+                    <TopicContainer
+                      topic={topic}
+                      isSelected={selectedTopicIds.includes(topic.id)}
+                      onToggleSelect={() => onToggleSelect(topic.id)}
+                      onRename={name => onRename(topic.id, name)}
+                      onStatusChange={status => onStatusChange(topic.id, status)}
+                      onDelete={() => onDelete(topic.id)}
+                      preparation={preparation}
+                      onUpdateTopic={updates => onUpdateTopic?.(topic.id, updates)}
+                    />
+                  </div>
+                ) : (
+                  <TopicContainer
+                    topic={topic}
+                    isSelected={selectedTopicIds.includes(topic.id)}
+                    onToggleSelect={() => onToggleSelect(topic.id)}
+                    onRename={name => onRename(topic.id, name)}
+                    onStatusChange={status => onStatusChange(topic.id, status)}
+                    onDelete={() => onDelete(topic.id)}
+                    preparation={preparation}
+                    onUpdateTopic={updates => onUpdateTopic?.(topic.id, updates)}
                   />
                 )}
-                <TopicContainer
-                  topic={topic}
-                  isSelected={selectedTopicIds.includes(topic.id)}
-                  onToggleSelect={() => onToggleSelect(topic.id)}
-                  onRename={name => onRename(topic.id, name)}
-                  onStatusChange={status => onStatusChange(topic.id, status)}
-                  onDelete={() => onDelete(topic.id)}
-                  preparation={preparation}
-                  onUpdateTopic={updates => onUpdateTopic?.(topic.id, updates)}
-                />
               </div>
             ))}
           </>
