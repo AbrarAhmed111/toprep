@@ -370,41 +370,44 @@ export function PreparationWorkspace({
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6 px-4 py-10">
-      <Link
-        href="/preparations"
-        className="inline-flex w-fit items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
-      >
-        <ArrowLeft size={15} />
-        Back to Preparations
-      </Link>
-
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
-            {preparation.title}
-          </h1>
-          {preparation.description && (
-            <p className="mt-1 max-w-xl text-sm text-muted">
-              {preparation.description}
-            </p>
-          )}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Badge tone="primary">{preparation.type}</Badge>
-            {preparation.targetDate && (
-              <Badge tone="neutral">
-                Target: {new Date(preparation.targetDate).toLocaleDateString()}
-              </Badge>
-            )}
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={() => setEditOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
+      <div className="flex flex-col gap-3">
+        <Link
+          href="/preparations"
+          className="inline-flex w-fit items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
         >
-          <Pencil size={15} />
-          Edit
-        </button>
+          <ArrowLeft size={15} />
+          Back to Preparations
+        </Link>
+
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+              {preparation.title}
+            </h1>
+            {preparation.description && (
+              <p className="mt-1 max-w-xl text-sm text-muted">
+                {preparation.description}
+              </p>
+            )}
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <Badge tone="primary">{preparation.type}</Badge>
+              {preparation.targetDate && (
+                <Badge tone="neutral">
+                  Target:{' '}
+                  {new Date(preparation.targetDate).toLocaleDateString()}
+                </Badge>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setEditOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <Pencil size={15} />
+            Edit
+          </button>
+        </div>
       </div>
 
       {topics.length > 0 && (
@@ -426,7 +429,7 @@ export function PreparationWorkspace({
             <button
               type="button"
               onClick={selectAllInPreparation}
-              className="font-medium text-primary hover:underline"
+              className="rounded font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               Select all ({topics.length})
             </button>
@@ -434,7 +437,7 @@ export function PreparationWorkspace({
           <button
             type="button"
             onClick={clearSelection}
-            className="font-medium text-muted hover:text-foreground hover:underline"
+            className="rounded font-medium text-muted hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             Clear
           </button>
