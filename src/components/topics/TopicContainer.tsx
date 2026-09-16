@@ -21,6 +21,7 @@ import {
 } from '@/types/preparation'
 import { InlineEditableText } from '@/components/ui/InlineEditableText'
 import { Textarea } from '@/components/ui/Textarea'
+import { FormattedText } from '@/components/ui/FormattedText'
 import { TopicYouTubeSearchRedesigned } from '@/components/youtube/TopicYouTubeSearchRedesigned'
 import {
   generateTopicExplanation,
@@ -352,7 +353,7 @@ export function TopicContainer({
           {topic.aiExplanation && (
             <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
               <p className="text-sm leading-relaxed text-foreground">
-                {topic.aiExplanation}
+                <FormattedText text={topic.aiExplanation} />
               </p>
             </div>
           )}
@@ -372,7 +373,9 @@ export function TopicContainer({
                     <span className="shrink-0 font-medium text-primary">
                       {idx + 1}.
                     </span>
-                    <span>{question}</span>
+                    <span>
+                      <FormattedText text={question} />
+                    </span>
                   </li>
                 ))}
               </ul>
