@@ -22,7 +22,7 @@ export interface YouTubeSearchResult {
 export async function searchYouTube(
   topicName: string,
   filters: YouTubeSearchFilters = {},
-  pageToken?: string
+  pageToken?: string,
 ): Promise<YouTubeSearchResult> {
   try {
     const params = new URLSearchParams({
@@ -64,7 +64,7 @@ export async function searchYouTube(
 
 // Fetch additional details (duration, view count) for videos
 export async function getVideoDetails(
-  videoIds: string[]
+  videoIds: string[],
 ): Promise<Map<string, { duration: string; viewCount: number }>> {
   if (videoIds.length === 0) return new Map()
 

@@ -29,14 +29,14 @@ export async function POST(request: NextRequest) {
     if (!videoIds || !Array.isArray(videoIds) || videoIds.length === 0) {
       return NextResponse.json(
         { error: 'videoIds array is required' },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
     if (!YOUTUBE_API_KEY) {
       return NextResponse.json(
         { error: 'YouTube API key not configured' },
-        { status: 500 }
+        { status: 500 },
       )
     }
 
@@ -47,30 +47,31 @@ export async function POST(request: NextRequest) {
     })
 
     const response = await fetch(
-      `https://www.googleapis.com/youtube/v3/videos?${params.toString()}`
+      `https://www.googleapis.com/youtube/v3/videos?${params.toString()}`,
     )
 
     if (!response.ok) {
       return NextResponse.json(
         { error: 'Failed to fetch video details' },
-        { status: response.status }
+        { status: response.status },
       )
     }
 
     const data = await response.json()
 
-    const videos = data.items?.map((item: any) => ({
-      id: item.id,
-      duration: parseDuration(item.contentDetails?.duration || ''),
-      viewCount: parseInt(item.statistics?.viewCount || '0', 10),
-    })) || []
+    const videos =
+      data.items?.map((item: any) => ({
+        id: item.id,
+        duration: parseDuration(item.contentDetails?.duration || ''),
+        viewCount: parseInt(item.statistics?.viewCount || '0', 10),
+      })) || []
 
     return NextResponse.json({ videos })
   } catch (error) {
     console.error('Video details error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

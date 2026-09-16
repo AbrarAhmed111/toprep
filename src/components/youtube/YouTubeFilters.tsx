@@ -1,5 +1,6 @@
 'use client'
 
+import { Select } from '@/components/ui/Select'
 import { YouTubeSearchFilters } from '@/lib/api/youtubeSearch'
 
 interface YouTubeFiltersProps {
@@ -12,9 +13,11 @@ export function YouTubeFilters({
   onFiltersChange,
 }: YouTubeFiltersProps) {
   const handleDurationChange = (value: string) => {
-    const duration =
-      (value as 'any' | 'short' | 'medium' | 'long') || undefined
-    onFiltersChange({ ...filters, duration: duration === 'any' ? undefined : duration })
+    const duration = (value as 'any' | 'short' | 'medium' | 'long') || undefined
+    onFiltersChange({
+      ...filters,
+      duration: duration === 'any' ? undefined : duration,
+    })
   }
 
   const handleSortChange = (value: string) => {
@@ -27,41 +30,29 @@ export function YouTubeFilters({
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        {/* Duration Filter */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-foreground">
-            Duration
-          </label>
-          <select
-            value={filters.duration || 'any'}
-            onChange={e => handleDurationChange(e.target.value)}
-            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground transition-colors focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-          >
-            <option value="any">Any</option>
-            <option value="short">Short (&lt; 4 min)</option>
-            <option value="medium">Medium (4-20 min)</option>
-            <option value="long">Long (&gt; 20 min)</option>
-          </select>
-        </div>
+    <div className="flex flex-wrap gap-2">
+      <Select
+        aria-label="Duration"
+        value={filters.duration || 'any'}
+        onChange={e => handleDurationChange(e.target.value)}
+        className="w-auto"
+      >
+        <option value="any">Any duration</option>
+        <option value="short">Short (&lt; 4 min)</option>
+        <option value="medium">Medium (4-20 min)</option>
+        <option value="long">Long (&gt; 20 min)</option>
+      </Select>
 
-        {/* Sort Filter */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-foreground">
-            Sort by
-          </label>
-          <select
-            value={filters.sort || 'relevance'}
-            onChange={e => handleSortChange(e.target.value)}
-            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground transition-colors focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-          >
-            <option value="relevance">Relevance</option>
-            <option value="upload_date">Newest</option>
-            <option value="view_count">Most Viewed</option>
-          </select>
-        </div>
-      </div>
+      <Select
+        aria-label="Sort by"
+        value={filters.sort || 'relevance'}
+        onChange={e => handleSortChange(e.target.value)}
+        className="w-auto"
+      >
+        <option value="relevance">Relevance</option>
+        <option value="upload_date">Newest</option>
+        <option value="view_count">Most viewed</option>
+      </Select>
     </div>
   )
 }
