@@ -24,7 +24,7 @@ export default function Error({
           <AlertTriangle size={32} />
         </span>
 
-        <h1 className="mb-3 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+        <h1 className="font-display mb-3 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
           Something went wrong
         </h1>
 

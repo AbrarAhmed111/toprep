@@ -2,7 +2,14 @@
 
 import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { ChevronRight, Eye, Calendar, Play, RotateCcw } from 'lucide-react'
+import {
+  ChevronRight,
+  Eye,
+  Calendar,
+  Play,
+  RotateCcw,
+  Youtube,
+} from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import {
   searchYouTube,
@@ -156,33 +163,38 @@ export function TopicYouTubeSearchRedesigned({
     setShowFilters(true)
   }
 
+  const isIdle = !hasSearched && !showFilters && !isSearching
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-          Video Lesson
-        </span>
-        {hasSearched && (
-          <button
-            type="button"
-            onClick={resetSearch}
-            className="inline-flex items-center gap-1 text-xs font-medium text-muted transition-colors hover:text-foreground"
-          >
-            <RotateCcw size={12} />
-            New search
-          </button>
-        )}
-      </div>
+      {/* Idle — rendered as a compact action alongside Explain/Questions,
+          not a separately-labeled feature, until there's something to show. */}
+      {isIdle && (
+        <button
+          type="button"
+          onClick={openFilters}
+          className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-hover"
+        >
+          <Youtube size={14} />
+          Find a video
+        </button>
+      )}
 
-      {/* Idle — nothing searched yet, filters not open */}
-      {!hasSearched && !showFilters && !isSearching && (
+      {!isIdle && (
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm text-muted">
-            Find a lesson for this topic on YouTube.
-          </p>
-          <Button variant="secondary" size="sm" onClick={openFilters}>
-            Find a lesson
-          </Button>
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted">
+            Video Lesson
+          </span>
+          {hasSearched && (
+            <button
+              type="button"
+              onClick={resetSearch}
+              className="inline-flex items-center gap-1 rounded text-xs font-medium text-muted transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <RotateCcw size={12} />
+              New search
+            </button>
+          )}
         </div>
       )}
 

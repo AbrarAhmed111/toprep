@@ -20,6 +20,7 @@ import {
   TOPIC_STATUS_LABELS,
 } from '@/types/preparation'
 import { InlineEditableText } from '@/components/ui/InlineEditableText'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Textarea } from '@/components/ui/Textarea'
 import { FormattedText } from '@/components/ui/FormattedText'
 import { TopicYouTubeSearchRedesigned } from '@/components/youtube/TopicYouTubeSearchRedesigned'
@@ -62,11 +63,14 @@ interface TopicContainerProps {
   onUpdateTopic?: (updates: Partial<Topic>) => void
 }
 
-const STATUS_STYLES: Record<TopicStatus, { dot: string; badge: string }> = {
-  need_to_study: { dot: 'bg-muted', badge: 'bg-muted/10 text-muted' },
-  understood: { dot: 'bg-primary', badge: 'bg-primary/10 text-primary' },
-  completed: { dot: 'bg-success', badge: 'bg-success/10 text-success' },
-  skipping: { dot: 'bg-border', badge: 'bg-border/40 text-muted' },
+// "Need to study" gets the attention-drawing blue; "understood" is a
+// deliberately neutral middle state; "completed" is green; "skipping" fades
+// into the background — mirrors the StatusBadge chip shown on the row above.
+const STATUS_SELECT_CLASSES: Record<TopicStatus, string> = {
+  need_to_study: 'bg-primary/10 text-primary',
+  understood: 'bg-surface-hover text-foreground',
+  completed: 'bg-success/10 text-success',
+  skipping: 'bg-border/40 text-status-skip',
 }
 
 export function TopicContainer({
@@ -88,7 +92,6 @@ export function TopicContainer({
   const [notesSaved, setNotesSaved] = useState(false)
   const noteSaveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const notesSavedFlash = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const styles = STATUS_STYLES[topic.status]
 
   useEffect(() => {
     return () => {
@@ -192,7 +195,7 @@ export function TopicContainer({
         onClick={toggleExpanded}
         onKeyDown={handleRowKeyDown}
         className={clsx(
-          'group flex cursor-pointer items-center gap-2 rounded-lg py-2 pl-1 pr-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          'group flex cursor-pointer items-start gap-2 rounded-lg py-2.5 pl-1 pr-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
           isDragging ? 'bg-surface shadow-md' : 'hover:bg-surface-hover',
         )}
       >
@@ -200,7 +203,7 @@ export function TopicContainer({
           type="button"
           aria-label="Drag to reorder topic"
           onClick={event => event.stopPropagation()}
-          className="shrink-0 cursor-grab touch-none rounded-md p-1 text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 active:cursor-grabbing"
+          className="mt-0.5 shrink-0 cursor-grab touch-none rounded-md p-1 text-muted/50 transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:cursor-grabbing"
           {...attributes}
           {...listeners}
         >
@@ -212,29 +215,25 @@ export function TopicContainer({
           checked={isSelected}
           onChange={onToggleSelect}
           onClick={event => event.stopPropagation()}
-          className="h-4 w-4 shrink-0 cursor-pointer rounded border-border accent-primary focus:ring-2 focus:ring-primary"
+          className="mt-1.5 h-4 w-4 shrink-0 cursor-pointer rounded border-border accent-primary focus:ring-2 focus:ring-primary"
           aria-label={`Select ${topic.name}`}
         />
 
-        <span
-          className={clsx('h-2 w-2 shrink-0 rounded-full', styles.dot)}
-          aria-hidden="true"
-        />
-
-        <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
           <InlineEditableText
             value={topic.name}
             onCommit={onRename}
             as="label"
             ariaLabel={`Rename ${topic.name}`}
           />
+          <StatusBadge status={topic.status} className="w-fit" />
         </div>
 
         <ChevronRight
           size={16}
           aria-hidden="true"
           className={clsx(
-            'shrink-0 text-muted transition-transform duration-200',
+            'mt-1.5 shrink-0 text-muted transition-transform duration-200',
             isExpanded && 'rotate-90',
           )}
         />
@@ -248,7 +247,7 @@ export function TopicContainer({
               onChange={e => onStatusChange(e.target.value as TopicStatus)}
               className={clsx(
                 'cursor-pointer rounded-md border-0 px-3 py-1 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50',
-                styles.badge,
+                STATUS_SELECT_CLASSES[topic.status],
               )}
             >
               {Object.entries(TOPIC_STATUS_LABELS).map(([status, label]) => (
@@ -275,7 +274,7 @@ export function TopicContainer({
             <button
               type="button"
               onClick={onDelete}
-              className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-danger-bg hover:text-danger"
+              className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-danger-bg hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Trash2 size={14} />
               Delete
@@ -350,6 +349,11 @@ export function TopicContainer({
             </div>
           )}
 
+          <TopicYouTubeSearchRedesigned
+            topicName={topic.name}
+            topicId={topic.id}
+          />
+
           {topic.aiExplanation && (
             <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
               <p className="text-sm leading-relaxed text-foreground">
@@ -390,7 +394,7 @@ export function TopicContainer({
             </div>
           )}
 
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 border-t border-border pt-3">
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted">
                 Notes
@@ -413,11 +417,6 @@ export function TopicContainer({
               aria-label={`Notes for ${topic.name}`}
             />
           </div>
-
-          <TopicYouTubeSearchRedesigned
-            topicName={topic.name}
-            topicId={topic.id}
-          />
         </div>
       )}
     </div>

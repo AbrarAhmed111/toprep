@@ -89,8 +89,9 @@ export function PreparationFormModal({
       >
         <Input
           name="title"
-          label="Title"
+          label="What are you preparing for?"
           placeholder="e.g. Full Stack Developer Interview"
+          className="text-base py-2.5"
           value={values.title}
           error={titleError ?? undefined}
           onChange={event => {
@@ -101,7 +102,7 @@ export function PreparationFormModal({
         />
         <Textarea
           name="description"
-          label="Description"
+          label="Tell us a little more (optional)"
           placeholder="Optional context for this preparation"
           rows={3}
           value={values.description}

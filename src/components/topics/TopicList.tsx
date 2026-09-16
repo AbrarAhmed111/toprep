@@ -25,6 +25,7 @@ interface TopicListProps {
   sections: Section[]
   selectedTopicIds: string[]
   emptyMessage?: string
+  compact?: boolean
   preparation?: Preparation
   onToggleSelect: (id: string) => void
   onRename: (id: string, name: string) => void
@@ -40,6 +41,7 @@ export function TopicList({
   sections,
   selectedTopicIds,
   emptyMessage,
+  compact,
   preparation,
   onToggleSelect,
   onRename,
@@ -58,6 +60,13 @@ export function TopicList({
   const [animationParent] = useAutoAnimate({ duration: 350 })
 
   if (topics.length === 0) {
+    if (compact) {
+      return (
+        <p className="px-1 py-2 text-sm text-muted">
+          {emptyMessage ?? 'No topics yet.'}
+        </p>
+      )
+    }
     return (
       <EmptyState
         icon={<ListChecks size={32} />}

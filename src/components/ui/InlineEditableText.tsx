@@ -13,7 +13,7 @@ interface InlineEditableTextProps {
 }
 
 const roleClasses: Record<'heading' | 'label', string> = {
-  heading: 'text-lg font-semibold text-foreground',
+  heading: 'text-xs font-semibold uppercase tracking-wider text-muted',
   label: 'text-[15px] font-medium text-foreground',
 }
 
@@ -96,7 +96,7 @@ export function InlineEditableText({
           setIsEditing(true)
         }}
         aria-label={ariaLabel ?? `Rename ${value}`}
-        className="shrink-0 rounded p-0.5 text-muted opacity-0 transition-opacity hover:text-foreground focus-visible:opacity-100 group-hover/edit:opacity-100"
+        className="shrink-0 rounded p-0.5 text-muted/50 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <Pencil size={13} />
       </button>

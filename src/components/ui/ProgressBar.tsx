@@ -7,6 +7,7 @@ interface ProgressBarProps {
   label?: ReactNode
   className?: string
   trackClassName?: string
+  barClassName?: string
 }
 
 export function ProgressBar({
@@ -15,6 +16,7 @@ export function ProgressBar({
   label,
   className,
   trackClassName,
+  barClassName,
 }: ProgressBarProps) {
   const percent =
     max > 0 ? Math.min(100, Math.max(0, Math.round((value / max) * 100))) : 0
@@ -28,7 +30,10 @@ export function ProgressBar({
         )}
       >
         <div
-          className="h-full rounded-full bg-primary transition-all duration-300"
+          className={clsx(
+            'h-full rounded-full transition-all duration-300',
+            barClassName ?? 'bg-primary',
+          )}
           style={{ width: `${percent}%` }}
         />
       </div>

@@ -51,14 +51,14 @@ export function SectionHeader({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group flex flex-1 items-center gap-2 py-2.5 ${
+      className={`group flex flex-1 items-center gap-2 py-3.5 ${
         isDragging ? 'relative z-10 rounded-lg bg-surface shadow-md' : ''
       }`}
     >
       <button
         type="button"
         aria-label="Drag to reorder section"
-        className="cursor-grab touch-none rounded-md p-1.5 text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 active:cursor-grabbing"
+        className="cursor-grab touch-none rounded-md p-1.5 text-muted/50 transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:cursor-grabbing"
         {...attributes}
         {...listeners}
       >
@@ -92,7 +92,7 @@ export function SectionHeader({
         type="button"
         onClick={onDelete}
         aria-label={`Delete ${section.name}`}
-        className="rounded-lg p-2 text-muted transition-colors hover:bg-danger-bg hover:text-danger"
+        className="rounded-lg p-2 text-muted transition-colors hover:bg-danger-bg hover:text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <Trash2 size={16} />
       </button>

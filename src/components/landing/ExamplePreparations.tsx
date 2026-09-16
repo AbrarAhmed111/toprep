@@ -6,15 +6,18 @@ import { useAppDispatch } from '@/store/hooks'
 import { preparationAdded } from '@/store/preparations/preparationsSlice'
 import { topicsAddedMany } from '@/store/topics/topicsSlice'
 import { buildPreparation } from '@/lib/preparations/createPreparation'
+import { PreparationType } from '@/types/preparation'
 
 interface ExamplePreparation {
   title: string
+  type: PreparationType
   topics: string[]
 }
 
 const EXAMPLES: ExamplePreparation[] = [
   {
     title: 'Full Stack Developer Interview',
+    type: 'Interview',
     topics: [
       'JavaScript Fundamentals',
       'React',
@@ -28,6 +31,7 @@ const EXAMPLES: ExamplePreparation[] = [
   },
   {
     title: 'React Interview',
+    type: 'Interview',
     topics: [
       'JSX & Components',
       'Hooks (useState, useEffect)',
@@ -41,6 +45,7 @@ const EXAMPLES: ExamplePreparation[] = [
   },
   {
     title: 'JavaScript Fundamentals',
+    type: 'Custom',
     topics: [
       'Variables & Scope',
       'Closures',
@@ -54,6 +59,7 @@ const EXAMPLES: ExamplePreparation[] = [
   },
   {
     title: 'System Design Preparation',
+    type: 'Custom',
     topics: [
       'Scalability Basics',
       'Load Balancing',
@@ -67,6 +73,7 @@ const EXAMPLES: ExamplePreparation[] = [
   },
   {
     title: 'Python Backend Interview',
+    type: 'Interview',
     topics: [
       'Python Fundamentals',
       'Django/Flask Basics',
@@ -87,7 +94,7 @@ export function ExamplePreparations() {
   const createExample = (example: ExamplePreparation) => {
     const { preparation, topics } = buildPreparation(
       example.title,
-      'Interview',
+      example.type,
       example.topics,
     )
     dispatch(preparationAdded(preparation))
@@ -107,7 +114,7 @@ export function ExamplePreparations() {
             key={example.title}
             type="button"
             onClick={() => createExample(example)}
-            className="rounded-lg border border-border bg-surface px-3.5 py-1.5 text-sm font-medium text-foreground transition-colors hover:border-primary hover:text-primary"
+            className="rounded-lg border border-border bg-surface px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-md"
           >
             {example.title}
           </button>

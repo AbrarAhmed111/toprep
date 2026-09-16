@@ -141,7 +141,10 @@ export function SectionBoard({
               items={sections.map(s => s.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div ref={sectionsAnimationParent} className="flex flex-col">
+              <div
+                ref={sectionsAnimationParent}
+                className="flex flex-col gap-1"
+              >
                 {sections.map(section => {
                   const groupTopics = topicsBySection(section.id)
                   const { allSelected, someSelected } =
@@ -149,7 +152,7 @@ export function SectionBoard({
                   const isExpanded = expandedSections.has(section.id)
 
                   return (
-                    <div key={section.id} className="flex flex-col">
+                    <div key={section.id} className="flex flex-col pt-3">
                       <div className="flex items-center border-b border-border">
                         <button
                           onClick={() => toggleSectionExpand(section.id)}
@@ -188,7 +191,8 @@ export function SectionBoard({
                             sections={sections}
                             selectedTopicIds={selectedTopicIds}
                             preparation={preparation}
-                            emptyMessage="Drag topics here, or move one in using its Section dropdown."
+                            compact
+                            emptyMessage="No topics yet — drag one here, or move one in from its Section dropdown."
                             onToggleSelect={onToggleSelectTopic}
                             onRename={onRenameTopic}
                             onStatusChange={onStatusChangeTopic}
@@ -215,6 +219,7 @@ export function SectionBoard({
               sections={sections}
               selectedTopicIds={selectedTopicIds}
               preparation={preparation}
+              compact
               emptyMessage="Every topic has a section."
               onToggleSelect={onToggleSelectTopic}
               onRename={onRenameTopic}

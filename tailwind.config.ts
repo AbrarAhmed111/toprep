@@ -38,6 +38,13 @@ const config: Config = {
           bg: withOpacity('--danger-bg'),
           foreground: withOpacity('--danger-foreground'),
         },
+        type: {
+          interview: withOpacity('--type-interview'),
+          exam: withOpacity('--type-exam'),
+          certification: withOpacity('--type-certification'),
+          custom: withOpacity('--type-custom'),
+        },
+        'status-skip': withOpacity('--status-skip'),
       },
       boxShadow: {
         sm: 'var(--shadow-sm)',
@@ -46,7 +53,8 @@ const config: Config = {
         lg: 'var(--shadow-lg)',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['var(--font-sans)', 'Inter', 'sans-serif'],
+        display: ['var(--font-display)', 'Fraunces', 'serif'],
       },
     },
   },

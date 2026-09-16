@@ -34,7 +34,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="animate-scale-in relative z-10 w-full max-w-md rounded-xl border border-border bg-surface shadow-lg"
+        className="animate-scale-in relative z-10 w-full max-w-md rounded-2xl border border-border bg-surface shadow-lg"
       >
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <h2 className="text-base font-semibold text-foreground">{title}</h2>
