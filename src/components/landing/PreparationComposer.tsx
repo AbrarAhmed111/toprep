@@ -7,17 +7,16 @@ import { ArrowRight } from 'lucide-react'
 import { useAppDispatch } from '@/store/hooks'
 import { preparationAdded } from '@/store/preparations/preparationsSlice'
 import { topicsAddedMany } from '@/store/topics/topicsSlice'
-import { parseBulkTopics } from '@/lib/topics/parseBulkTopics'
 import { buildPreparation } from '@/lib/preparations/createPreparation'
 import { Input } from '@/components/ui/Input'
-import { Textarea } from '@/components/ui/Textarea'
 import { Button } from '@/components/ui/Button'
+import { TopicTagInput } from './TopicTagInput'
 
 export function PreparationComposer() {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [title, setTitle] = useState('')
-  const [topicsText, setTopicsText] = useState('')
+  const [topics, setTopics] = useState<string[]>([])
   const [titleError, setTitleError] = useState<string | null>(null)
 
   const handleSubmit = (event: FormEvent) => {
@@ -28,14 +27,13 @@ export function PreparationComposer() {
       return
     }
 
-    const { names } = parseBulkTopics(topicsText)
-    const { preparation, topics } = buildPreparation(
+    const { preparation, topics: builtTopics } = buildPreparation(
       trimmedTitle,
       'Custom',
-      names,
+      topics,
     )
     dispatch(preparationAdded(preparation))
-    if (topics.length) dispatch(topicsAddedMany(topics))
+    if (builtTopics.length) dispatch(topicsAddedMany(builtTopics))
     toast.success('Preparation created')
     router.push(`/preparations/${preparation.id}`)
   }
@@ -43,7 +41,7 @@ export function PreparationComposer() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full max-w-xl flex-col gap-5 rounded-xl border border-border bg-surface p-6 text-left shadow-sm sm:p-8"
+      className="flex w-full max-w-2xl flex-col gap-5 rounded-2xl border border-border/60 bg-surface/95 p-6 text-left shadow-lg backdrop-blur-sm sm:p-8"
     >
       <Input
         label="What are you preparing for?"
@@ -56,13 +54,12 @@ export function PreparationComposer() {
         }}
         autoFocus
       />
-      <Textarea
+      <TopicTagInput
         label="What do you need to learn?"
-        placeholder={'React\nSystem Design\nBehavioral Interview Questions'}
-        rows={5}
-        value={topicsText}
-        onChange={event => setTopicsText(event.target.value)}
-        hint="One topic per line. You can add or edit these anytime."
+        placeholder="Type a topic and press Enter…"
+        value={topics}
+        onChange={setTopics}
+        hint="Press Enter after each topic — paste a list to add several at once."
       />
       <Button type="submit" className="w-full justify-center py-3 text-base">
         Start Preparing
