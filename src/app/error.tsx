@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { RiAlarmWarningFill } from 'react-icons/ri'
+import { AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 
@@ -21,10 +21,10 @@ export default function Error({
     <main className="flex min-h-[70vh] flex-col items-center justify-center px-4">
       <div className="text-center">
         <span className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-danger-bg text-danger">
-          <RiAlarmWarningFill size={32} />
+          <AlertTriangle size={32} />
         </span>
 
-        <h1 className="mb-3 text-3xl font-semibold text-foreground md:text-4xl">
+        <h1 className="mb-3 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
           Something went wrong
         </h1>
 
@@ -46,7 +46,7 @@ export default function Error({
             <summary className="cursor-pointer text-sm text-muted hover:text-foreground">
               Error Details (Development)
             </summary>
-            <pre className="mt-2 overflow-auto rounded-xl border border-border bg-surface-2 p-4 text-xs text-danger">
+            <pre className="mt-2 overflow-auto rounded-xl border border-border bg-surface-hover p-4 text-xs text-danger">
               {error.message}
             </pre>
           </details>
