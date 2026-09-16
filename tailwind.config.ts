@@ -15,16 +15,16 @@ const config: Config = {
       colors: {
         background: withOpacity('--background'),
         foreground: withOpacity('--foreground'),
-        brand: {
-          DEFAULT: withOpacity('--brand'),
-          hover: withOpacity('--brand-hover'),
-          foreground: withOpacity('--brand-foreground'),
+        primary: {
+          DEFAULT: withOpacity('--primary'),
+          hover: withOpacity('--primary-hover'),
+          soft: withOpacity('--primary-soft'),
+          foreground: withOpacity('--primary-foreground'),
         },
         surface: withOpacity('--surface'),
-        'surface-2': withOpacity('--surface-2'),
+        'surface-hover': withOpacity('--surface-hover'),
         border: withOpacity('--border'),
         muted: withOpacity('--muted'),
-        teal: withOpacity('--accent-teal'),
         success: {
           DEFAULT: withOpacity('--success'),
           bg: withOpacity('--success-bg'),
@@ -36,6 +36,7 @@ const config: Config = {
         danger: {
           DEFAULT: withOpacity('--danger'),
           bg: withOpacity('--danger-bg'),
+          foreground: withOpacity('--danger-foreground'),
         },
       },
       boxShadow: {

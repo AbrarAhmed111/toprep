@@ -8,97 +8,54 @@
  * Color tokens are stored as "R G B" triplets (no rgb()/hex) so Tailwind's
  * opacity modifiers (bg-surface/80, border-border/50, ...) work correctly —
  * see tailwind.config.ts, which wraps each one as rgb(var(--x) / <alpha>).
+ *
+ * Light-only, neutral + blue palette. There is no dark mode.
  */
 :root {
-  --background: 250 243 230;
-  --foreground: 43 36 23;
-  --surface: 255 253 248;
-  --surface-2: 241 228 204;
-  --border: 232 215 184;
-  --muted: 138 122 95;
-  --brand: 201 100 66;
-  --brand-hover: 177 85 55;
-  --brand-foreground: 255 255 255;
-  --accent-teal: 79 143 124;
-  --success: 79 148 99;
-  --success-bg: 232 243 231;
-  --warning: 192 134 42;
-  --warning-bg: 250 240 220;
-  --danger: 193 72 61;
-  --danger-bg: 250 233 230;
+  --background: 248 250 252;
+  --foreground: 17 24 39;
+  --surface: 255 255 255;
+  --surface-hover: 241 245 249;
+  --border: 226 232 240;
+  --muted: 100 116 139;
+  --primary: 37 99 235;
+  --primary-hover: 29 78 216;
+  --primary-soft: 239 246 255;
+  --primary-foreground: 255 255 255;
+  --success: 22 163 74;
+  --success-bg: 240 253 244;
+  --warning: 217 119 6;
+  --warning-bg: 255 251 235;
+  --danger: 220 38 38;
+  --danger-bg: 254 242 242;
   --danger-foreground: 255 255 255;
-  --shadow-sm: 0 1px 2px rgba(43, 32, 20, 0.07);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
   --shadow-md:
-    0 6px 16px rgba(43, 32, 20, 0.09), 0 2px 5px rgba(43, 32, 20, 0.05);
+    0 4px 10px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.05);
   --shadow-lg:
-    0 18px 40px rgba(43, 32, 20, 0.16), 0 6px 12px rgba(43, 32, 20, 0.06);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --background: 27 22 15;
-    --foreground: 244 234 214;
-    --surface: 36 30 20;
-    --surface-2: 21 17 11;
-    --border: 61 51 34;
-    --muted: 176 160 133;
-    --brand: 229 138 99;
-    --brand-hover: 238 154 118;
-    --brand-foreground: 34 19 10;
-    --accent-teal: 127 184 165;
-    --success: 130 193 142;
-    --success-bg: 34 48 34;
-    --warning: 226 178 91;
-    --warning-bg: 51 41 19;
-    --danger: 227 139 126;
-    --danger-bg: 52 32 26;
-    --danger-foreground: 34 19 10;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
-    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55);
-  }
-}
-
-:root[data-theme='dark'] {
-  --background: 27 22 15;
-  --foreground: 244 234 214;
-  --surface: 36 30 20;
-  --surface-2: 21 17 11;
-  --border: 61 51 34;
-  --muted: 176 160 133;
-  --brand: 229 138 99;
-  --brand-hover: 238 154 118;
-  --brand-foreground: 34 19 10;
-  --accent-teal: 127 184 165;
-  --success: 130 193 142;
-  --success-bg: 34 48 34;
-  --warning: 226 178 91;
-  --warning-bg: 51 41 19;
-  --danger: 227 139 126;
-  --danger-bg: 52 32 26;
-  --danger-foreground: 34 19 10;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55);
+    0 12px 24px rgba(15, 23, 42, 0.1), 0 4px 8px rgba(15, 23, 42, 0.04);
 }
 
 html {
-  color-scheme: dark;
-}
-
-html[data-theme='light'] {
   color-scheme: light;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
-  background: linear-gradient(135deg, rgb(var(--background)) 0%, rgb(23 37 84 / 0.5) 100%);
-  background-attachment: fixed;
+  background: rgb(var(--background));
   color: rgb(var(--foreground));
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .no-scroll {

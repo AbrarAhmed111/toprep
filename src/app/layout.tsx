@@ -3,7 +3,6 @@ import { Toaster } from 'react-hot-toast'
 import { ReactNode } from 'react'
 import { Metadata } from 'next'
 import Providers from '@/store/Providers'
-import { ThemeScript } from '@/components/theme/ThemeScript'
 import { AppHeader } from '@/components/layout/AppHeader'
 
 export const metadata: Metadata = {
@@ -22,11 +21,8 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <Providers>
-      <html lang="en" suppressHydrationWarning>
-        <head>
-          <ThemeScript />
-        </head>
-        <body suppressHydrationWarning className="antialiased">
+      <html lang="en">
+        <body className="antialiased">
           <Toaster
             position="top-center"
             reverseOrder={false}
