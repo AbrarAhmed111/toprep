@@ -63,7 +63,7 @@ export function DeleteSectionDialog({
               name="delete-section-topics"
               checked={!deleteTopics}
               onChange={() => setDeleteTopics(false)}
-              className="mt-0.5 accent-brand"
+              className="mt-0.5 accent-primary"
             />
             <span>
               <span className="font-medium text-foreground">

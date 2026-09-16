@@ -17,7 +17,6 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import { Card } from '@/components/ui/Card'
 import { Section, Topic, TopicStatus, Preparation } from '@/types/preparation'
 import { TopicList } from '@/components/topics/TopicList'
 import { AddSectionForm } from './AddSectionForm'
@@ -29,7 +28,6 @@ interface SectionBoardProps {
   topics: Topic[]
   selectedTopicIds: string[]
   preparation?: Preparation
-  justReorganized?: boolean
   onToggleSelectTopic: (id: string) => void
   onSelectManyTopics: (ids: string[], select: boolean) => void
   onRenameTopic: (id: string, name: string) => void
@@ -49,7 +47,6 @@ export function SectionBoard({
   topics,
   selectedTopicIds,
   preparation,
-  justReorganized,
   onToggleSelectTopic,
   onSelectManyTopics,
   onRenameTopic,
@@ -65,7 +62,7 @@ export function SectionBoard({
 }: SectionBoardProps) {
   const [pendingDelete, setPendingDelete] = useState<Section | null>(null)
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(sections.map(s => s.id))
+    new Set(sections.map(s => s.id)),
   )
 
   const toggleSectionExpand = (sectionId: string) => {
@@ -125,7 +122,6 @@ export function SectionBoard({
           sections={sections}
           selectedTopicIds={selectedTopicIds}
           preparation={preparation}
-          justReorganized={justReorganized}
           onToggleSelect={onToggleSelectTopic}
           onRename={onRenameTopic}
           onStatusChange={onStatusChangeTopic}
@@ -145,10 +141,7 @@ export function SectionBoard({
               items={sections.map(s => s.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div
-                ref={sectionsAnimationParent}
-                className="flex flex-col gap-4"
-              >
+              <div ref={sectionsAnimationParent} className="flex flex-col">
                 {sections.map(section => {
                   const groupTopics = topicsBySection(section.id)
                   const { allSelected, someSelected } =
@@ -156,62 +149,57 @@ export function SectionBoard({
                   const isExpanded = expandedSections.has(section.id)
 
                   return (
-                    <Card key={section.id} className="overflow-hidden">
-                      <div className="flex items-center">
+                    <div key={section.id} className="flex flex-col">
+                      <div className="flex items-center border-b border-border">
                         <button
                           onClick={() => toggleSectionExpand(section.id)}
-                          className="shrink-0 p-3 text-muted hover:text-foreground transition-colors"
-                          title={isExpanded ? 'Collapse section' : 'Expand section'}
+                          className="shrink-0 rounded-md p-1.5 text-muted transition-colors hover:bg-surface-hover hover:text-foreground"
+                          title={
+                            isExpanded ? 'Collapse section' : 'Expand section'
+                          }
                         >
                           <ChevronDown
-                            size={20}
-                            className={`transition-transform duration-300 ${
+                            size={18}
+                            className={`transition-transform duration-200 ${
                               isExpanded ? '' : '-rotate-90'
                             }`}
                           />
                         </button>
-                        <div className="flex-1">
-                          <SectionHeader
-                            section={section}
-                            topicCount={groupTopics.length}
-                            allSelected={allSelected}
-                            someSelected={someSelected}
-                            onToggleSelectAll={() =>
-                              onSelectManyTopics(
-                                groupTopics.map(t => t.id),
-                                !allSelected,
-                              )
-                            }
-                            onRename={name => onRenameSection(section.id, name)}
-                            onDelete={() => setPendingDelete(section)}
-                          />
-                        </div>
+                        <SectionHeader
+                          section={section}
+                          topicCount={groupTopics.length}
+                          allSelected={allSelected}
+                          someSelected={someSelected}
+                          onToggleSelectAll={() =>
+                            onSelectManyTopics(
+                              groupTopics.map(t => t.id),
+                              !allSelected,
+                            )
+                          }
+                          onRename={name => onRenameSection(section.id, name)}
+                          onDelete={() => setPendingDelete(section)}
+                        />
                       </div>
 
                       {isExpanded && (
-                        <div className="border-t border-border/40 p-3 animate-in fade-in slide-in-from-top-4 duration-500 relative">
-                          {/* Glow effect on expansion */}
-                          <div className="absolute inset-0 rounded-lg bg-brand/5 pointer-events-none" />
-                          <div className="relative z-10">
-                            <TopicList
-                              topics={groupTopics}
-                              sections={sections}
-                              selectedTopicIds={selectedTopicIds}
-                              preparation={preparation}
-                              justReorganized={justReorganized}
-                              emptyMessage="Drag topics here, or move one in using its Section dropdown."
-                              onToggleSelect={onToggleSelectTopic}
-                              onRename={onRenameTopic}
-                              onStatusChange={onStatusChangeTopic}
-                              onMoveToSection={onMoveTopicToSection}
-                              onDelete={onDeleteTopic}
-                              onUpdateTopic={onUpdateTopic}
-                              onReorder={onReorderTopicsInGroup}
-                            />
-                          </div>
+                        <div className="animate-slide-up py-2 pl-8">
+                          <TopicList
+                            topics={groupTopics}
+                            sections={sections}
+                            selectedTopicIds={selectedTopicIds}
+                            preparation={preparation}
+                            emptyMessage="Drag topics here, or move one in using its Section dropdown."
+                            onToggleSelect={onToggleSelectTopic}
+                            onRename={onRenameTopic}
+                            onStatusChange={onStatusChangeTopic}
+                            onMoveToSection={onMoveTopicToSection}
+                            onDelete={onDeleteTopic}
+                            onUpdateTopic={onUpdateTopic}
+                            onReorder={onReorderTopicsInGroup}
+                          />
                         </div>
                       )}
-                    </Card>
+                    </div>
                   )
                 })}
               </div>
@@ -219,7 +207,7 @@ export function SectionBoard({
           </DndContext>
 
           <div>
-            <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-muted">
+            <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted">
               Unsectioned
             </h3>
             <TopicList
@@ -227,7 +215,6 @@ export function SectionBoard({
               sections={sections}
               selectedTopicIds={selectedTopicIds}
               preparation={preparation}
-              justReorganized={justReorganized}
               emptyMessage="Every topic has a section."
               onToggleSelect={onToggleSelectTopic}
               onRename={onRenameTopic}

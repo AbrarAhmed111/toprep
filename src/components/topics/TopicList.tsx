@@ -26,7 +26,6 @@ interface TopicListProps {
   selectedTopicIds: string[]
   emptyMessage?: string
   preparation?: Preparation
-  justReorganized?: boolean
   onToggleSelect: (id: string) => void
   onRename: (id: string, name: string) => void
   onStatusChange: (id: string, status: TopicStatus) => void
@@ -42,7 +41,6 @@ export function TopicList({
   selectedTopicIds,
   emptyMessage,
   preparation,
-  justReorganized,
   onToggleSelect,
   onRename,
   onStatusChange,
@@ -87,65 +85,35 @@ export function TopicList({
   }
 
   return (
-    <div className="space-y-2">
-      <div ref={animationParent} className="space-y-2">
-        <>
-          {justReorganized && (
-            <style>{`
-              @keyframes shimmer {
-                0% { transform: translateX(-100%); opacity: 0; }
-                50% { opacity: 1; }
-                100% { transform: translateX(100%); opacity: 0; }
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={topics.map(t => t.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div ref={animationParent} className="flex flex-col">
+          {topics.map(topic => (
+            <TopicContainer
+              key={topic.id}
+              topic={topic}
+              sections={sections}
+              isSelected={selectedTopicIds.includes(topic.id)}
+              onToggleSelect={() => onToggleSelect(topic.id)}
+              onRename={name => onRename(topic.id, name)}
+              onStatusChange={status => onStatusChange(topic.id, status)}
+              onMoveToSection={sectionId =>
+                onMoveToSection(topic.id, sectionId)
               }
-              .topic-shimmer {
-                animation: shimmer 2s ease-in-out;
-              }
-            `}</style>
-          )}
-          {topics.map((topic, index) => (
-              <div key={topic.id}>
-                {justReorganized ? (
-                  <div
-                    className="relative animate-in fade-in slide-in-from-left-4 duration-500"
-                    style={{
-                      animationDelay: `${index * 75}ms`,
-                    }}
-                  >
-                    {/* Shimmer overlay effect - only on reorganization */}
-                    <div
-                      className="absolute inset-0 rounded-2xl pointer-events-none topic-shimmer"
-                      style={{
-                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-      
-                      }}
-                    />
-                    <TopicContainer
-                      topic={topic}
-                      isSelected={selectedTopicIds.includes(topic.id)}
-                      onToggleSelect={() => onToggleSelect(topic.id)}
-                      onRename={name => onRename(topic.id, name)}
-                      onStatusChange={status => onStatusChange(topic.id, status)}
-                      onDelete={() => onDelete(topic.id)}
-                      preparation={preparation}
-                      onUpdateTopic={updates => onUpdateTopic?.(topic.id, updates)}
-                    />
-                  </div>
-                ) : (
-                  <TopicContainer
-                    topic={topic}
-                    isSelected={selectedTopicIds.includes(topic.id)}
-                    onToggleSelect={() => onToggleSelect(topic.id)}
-                    onRename={name => onRename(topic.id, name)}
-                    onStatusChange={status => onStatusChange(topic.id, status)}
-                    onDelete={() => onDelete(topic.id)}
-                    preparation={preparation}
-                    onUpdateTopic={updates => onUpdateTopic?.(topic.id, updates)}
-                  />
-                )}
-              </div>
-            ))}
-        </>
-      </div>
-    </div>
+              onDelete={() => onDelete(topic.id)}
+              preparation={preparation}
+              onUpdateTopic={updates => onUpdateTopic?.(topic.id, updates)}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   )
 }

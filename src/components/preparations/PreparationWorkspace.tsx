@@ -30,6 +30,7 @@ import { TopicOrganizeResult } from '@/lib/api/topicOrganizer'
 import { Topic, TopicStatus } from '@/types/preparation'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ProgressBar } from '@/components/ui/ProgressBar'
 import { AddTopicPanel } from '@/components/topics/AddTopicPanel'
 import { AiOrganizeButton } from '@/components/topics/AiOrganizeButton'
 import { SectionBoard } from '@/components/sections/SectionBoard'
@@ -58,7 +59,6 @@ export function PreparationWorkspace({
     state => state.selection.selectedTopicIds,
   )
   const [editOpen, setEditOpen] = useState(false)
-  const [justReorganized, setJustReorganized] = useState(false)
 
   const topics = useMemo(
     () =>
@@ -203,10 +203,6 @@ export function PreparationWorkspace({
   // the new order — all in one synchronous pass so React batches it into a
   // single re-render and the whole board reflows in one animation.
   const applyAiOrganization = (result: TopicOrganizeResult) => {
-    // Mark that reorganization just happened for animations
-    setJustReorganized(true)
-    // Clear the flag after animations complete (3 seconds to cover all animations)
-    setTimeout(() => setJustReorganized(false), 3000)
     const now = new Date().toISOString()
     const sectionIdByName = new Map(
       sections.map(s => [s.name.toLowerCase(), s.id]),
@@ -362,7 +358,7 @@ export function PreparationWorkspace({
           action={
             <Link
               href="/preparations"
-              className="text-sm font-medium text-brand hover:underline"
+              className="text-sm font-medium text-primary hover:underline"
             >
               Back to your preparations
             </Link>
@@ -384,7 +380,7 @@ export function PreparationWorkspace({
 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
             {preparation.title}
           </h1>
           {preparation.description && (
@@ -393,7 +389,7 @@ export function PreparationWorkspace({
             </p>
           )}
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Badge tone="brand">{preparation.type}</Badge>
+            <Badge tone="primary">{preparation.type}</Badge>
             {preparation.targetDate && (
               <Badge tone="neutral">
                 Target: {new Date(preparation.targetDate).toLocaleDateString()}
@@ -404,7 +400,7 @@ export function PreparationWorkspace({
         <button
           type="button"
           onClick={() => setEditOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
         >
           <Pencil size={15} />
           Edit
@@ -412,25 +408,17 @@ export function PreparationWorkspace({
       </div>
 
       {topics.length > 0 && (
-        <div className="flex items-center gap-3">
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-2">
-            <div
-              className="h-full rounded-full bg-brand transition-all duration-300"
-              style={{
-                width: `${Math.round((completedCount / topics.length) * 100)}%`,
-              }}
-            />
-          </div>
-          <span className="shrink-0 text-xs font-medium text-muted">
-            {completedCount} of {topics.length} completed
-          </span>
-        </div>
+        <ProgressBar
+          value={completedCount}
+          max={topics.length}
+          label={`${completedCount} of ${topics.length} completed`}
+        />
       )}
 
       <AddTopicPanel onAddSingle={addSingleTopic} onAddBulk={addBulkTopics} />
 
       {validSelectedTopicIds.length > 0 && (
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface-hover px-3 py-2 text-sm">
           <span className="font-medium text-foreground">
             {validSelectedTopicIds.length} selected
           </span>
@@ -438,7 +426,7 @@ export function PreparationWorkspace({
             <button
               type="button"
               onClick={selectAllInPreparation}
-              className="font-medium text-brand hover:underline"
+              className="font-medium text-primary hover:underline"
             >
               Select all ({topics.length})
             </button>
@@ -472,7 +460,6 @@ export function PreparationWorkspace({
         topics={topics}
         selectedTopicIds={validSelectedTopicIds}
         preparation={preparation}
-        justReorganized={justReorganized}
         onToggleSelectTopic={toggleSelectTopic}
         onSelectManyTopics={selectManyTopics}
         onRenameTopic={(id, name) => updateTopic(id, { name })}
