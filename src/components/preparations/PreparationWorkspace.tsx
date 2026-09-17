@@ -27,6 +27,7 @@ import {
 import { generateId } from '@/lib/id'
 import { parseBulkTopics } from '@/lib/topics/parseBulkTopics'
 import { TopicOrganizeResult } from '@/lib/api/topicOrganizer'
+import { ExtractedPdfTopic } from '@/lib/api/pdfExtraction'
 import { Topic, TopicStatus } from '@/types/preparation'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -180,6 +181,89 @@ export function PreparationWorkspace({
     toast.success(notes.join(' · '))
   }
 
+  // Adds topics extracted from a PDF, each optionally tagged with a section
+  // name inferred by the backend (see pdf_extraction_service.py). Mirrors
+  // applyAiOrganization's section handling: reuse an existing section when
+  // the name matches case-insensitively, otherwise create it.
+  const addPdfTopics = (items: ExtractedPdfTopic[]) => {
+    const now = new Date().toISOString()
+    const seen = new Set(existingNames)
+    const fresh: ExtractedPdfTopic[] = []
+    let skippedExisting = 0
+    for (const item of items) {
+      const trimmed = item.name.trim()
+      if (!trimmed) continue
+      const key = trimmed.toLowerCase()
+      if (seen.has(key)) {
+        skippedExisting += 1
+        continue
+      }
+      seen.add(key)
+      fresh.push({ name: trimmed, section: item.section })
+    }
+
+    if (fresh.length === 0) {
+      toast.error('No new topics to add — all of those already exist')
+      return
+    }
+
+    const sectionIdByName = new Map(
+      sections.map(s => [s.name.toLowerCase(), s.id]),
+    )
+    let sectionPosition = nextSectionPosition
+    let sectionsCreated = 0
+    for (const item of fresh) {
+      const name = item.section?.trim()
+      if (!name) continue
+      const key = name.toLowerCase()
+      if (sectionIdByName.has(key)) continue
+      const id = generateId()
+      dispatch(
+        sectionAdded({
+          id,
+          preparationId,
+          name,
+          position: sectionPosition++,
+          createdAt: now,
+          updatedAt: now,
+        }),
+      )
+      sectionIdByName.set(key, id)
+      sectionsCreated += 1
+    }
+
+    dispatch(
+      topicsAddedMany(
+        fresh.map((item, index) => ({
+          id: generateId(),
+          preparationId,
+          sectionId: item.section
+            ? (sectionIdByName.get(item.section.trim().toLowerCase()) ?? null)
+            : null,
+          name: item.name,
+          status: 'need_to_study' as TopicStatus,
+          notes: '',
+          position: nextTopicPosition + index,
+          aiExplanation: null,
+          aiExpectedQuestions: [],
+          selectedVideoIds: [],
+          createdAt: now,
+          updatedAt: now,
+        })),
+      ),
+    )
+
+    const notes = [
+      `Added ${fresh.length} topic${fresh.length === 1 ? '' : 's'}`,
+    ]
+    if (sectionsCreated)
+      notes.push(
+        `${sectionsCreated} section${sectionsCreated === 1 ? '' : 's'} created`,
+      )
+    if (skippedExisting) notes.push(`${skippedExisting} already existed`)
+    toast.success(notes.join(' · '))
+  }
+
   const updateTopic = (id: string, patch: Partial<Topic>) => {
     const topic = topics.find(t => t.id === id)
     if (!topic) return
@@ -199,9 +283,11 @@ export function PreparationWorkspace({
 
   // Applies an AI organize result: creates any new sections the AI
   // introduced, reassigns each topic to its suggested section (reusing an
-  // existing section when the name matches, case-insensitively), and sets
-  // the new order — all in one synchronous pass so React batches it into a
-  // single re-render and the whole board reflows in one animation.
+  // existing section when the name matches, case-insensitively), reorders
+  // the sections themselves to match the order they first appear in the
+  // AI's topic sequence, and sets the new topic order — all in one
+  // synchronous pass so React batches it into a single re-render and the
+  // whole board reflows in one animation.
   const applyAiOrganization = (result: TopicOrganizeResult) => {
     const now = new Date().toISOString()
     const sectionIdByName = new Map(
@@ -243,6 +329,32 @@ export function PreparationWorkspace({
       sectionIdByTopicId.set(
         assignment.topic_id,
         name ? (sectionIdByName.get(name.toLowerCase()) ?? null) : null,
+      )
+    }
+
+    // The AI's topic order already implies a section order — the first
+    // section a learner would reach, in the sequence it suggested. Any
+    // section none of this round's topics landed in (so we can't infer a
+    // spot for it) keeps its previous relative order, appended after.
+    const orderedSectionIds: string[] = []
+    const seenSectionIds = new Set<string>()
+    result.ordered_topic_ids.forEach(topicId => {
+      const nextSectionId = sectionIdByTopicId.has(topicId)
+        ? (sectionIdByTopicId.get(topicId) ?? null)
+        : (topics.find(t => t.id === topicId)?.sectionId ?? null)
+      if (nextSectionId && !seenSectionIds.has(nextSectionId)) {
+        seenSectionIds.add(nextSectionId)
+        orderedSectionIds.push(nextSectionId)
+      }
+    })
+    for (const section of sections) {
+      if (seenSectionIds.has(section.id)) continue
+      seenSectionIds.add(section.id)
+      orderedSectionIds.push(section.id)
+    }
+    if (orderedSectionIds.length) {
+      dispatch(
+        sectionsReordered({ preparationId, orderedIds: orderedSectionIds }),
       )
     }
 
@@ -418,7 +530,11 @@ export function PreparationWorkspace({
         />
       )}
 
-      <AddTopicPanel onAddSingle={addSingleTopic} onAddBulk={addBulkTopics} />
+      <AddTopicPanel
+        onAddSingle={addSingleTopic}
+        onAddBulk={addBulkTopics}
+        onAddPdfTopics={addPdfTopics}
+      />
 
       {validSelectedTopicIds.length > 0 && (
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface-hover px-3 py-2 text-sm">

@@ -2,16 +2,49 @@ const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, '') ||
   'http://localhost:8000'
 
-export interface ExtractTopicsFromPdfResult {
-  topics: string[]
+export type PdfExtractionStage =
+  'validating' | 'reading' | 'analyzing' | 'organizing' | 'grouping'
+
+export interface PdfExtractionProgressEvent {
+  stage: PdfExtractionStage
+  status: 'active' | 'done'
+  message?: string
+  current?: number
+  total?: number
 }
 
-// Sends a PDF to the ToPrep backend for topic extraction. The endpoint
-// itself isn't implemented yet — this defines the contract the backend
-// needs to satisfy: POST multipart/form-data with a `file` field, returns
-// `{ topics: string[] }`.
+export interface ExtractedPdfTopic {
+  name: string
+  section: string | null
+}
+
+export interface ExtractTopicsFromPdfResult {
+  topics: ExtractedPdfTopic[]
+}
+
+interface CompleteEvent {
+  stage: 'complete'
+  status: 'done'
+  topics: ExtractedPdfTopic[]
+}
+
+interface ErrorEvent {
+  stage: 'error'
+  status: 'error'
+  message: string
+  status_code: number
+}
+
+type StreamEvent = PdfExtractionProgressEvent | CompleteEvent | ErrorEvent
+
+// Sends a PDF to the ToPrep backend for topic extraction. The backend
+// streams pipeline progress as Server-Sent Events (one JSON object per
+// `data:` line) so the caller can show live status instead of a bare
+// spinner — see onProgress. The stream always ends in either a "complete"
+// event (resolved here) or an "error" event (rejected here).
 export async function extractTopicsFromPdf(
   file: File,
+  onProgress?: (event: PdfExtractionProgressEvent) => void,
 ): Promise<ExtractTopicsFromPdfResult> {
   const formData = new FormData()
   formData.append('file', file)
@@ -37,5 +70,41 @@ export async function extractTopicsFromPdf(
     throw new Error(detail || 'Failed to extract topics from PDF')
   }
 
-  return response.json() as Promise<ExtractTopicsFromPdfResult>
+  if (!response.body) {
+    throw new Error('The server did not return a response stream.')
+  }
+
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+
+    let boundary = buffer.indexOf('\n\n')
+    while (boundary !== -1) {
+      const rawEvent = buffer.slice(0, boundary)
+      buffer = buffer.slice(boundary + 2)
+      boundary = buffer.indexOf('\n\n')
+
+      const dataLine = rawEvent
+        .split('\n')
+        .find(line => line.startsWith('data: '))
+      if (!dataLine) continue
+
+      const event = JSON.parse(dataLine.slice('data: '.length)) as StreamEvent
+
+      if (event.stage === 'complete') {
+        return { topics: event.topics }
+      }
+      if (event.stage === 'error') {
+        throw new Error(event.message || 'Failed to extract topics from PDF')
+      }
+      onProgress?.(event)
+    }
+  }
+
+  throw new Error('The server closed the connection before finishing.')
 }

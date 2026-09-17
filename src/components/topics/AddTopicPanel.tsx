@@ -15,22 +15,43 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { MAX_BULK_TOPICS } from '@/lib/topics/parseBulkTopics'
-import { extractTopicsFromPdf } from '@/lib/api/pdfExtraction'
+import {
+  ExtractedPdfTopic,
+  extractTopicsFromPdf,
+  PdfExtractionStage,
+} from '@/lib/api/pdfExtraction'
+import {
+  PDF_EXTRACTION_STAGES,
+  PdfExtractionProgress,
+  StageState,
+} from './PdfExtractionProgress'
 
 const MAX_PDF_SIZE_BYTES = 15 * 1024 * 1024 // 15MB
+
+const INITIAL_STAGE_STATUSES: Record<PdfExtractionStage, StageState> =
+  Object.fromEntries(
+    PDF_EXTRACTION_STAGES.map(({ key }) => [key, 'pending']),
+  ) as Record<PdfExtractionStage, StageState>
 
 interface AddTopicPanelProps {
   onAddSingle: (name: string) => void
   onAddBulk: (raw: string) => void
+  onAddPdfTopics: (topics: ExtractedPdfTopic[]) => void
 }
 
-export function AddTopicPanel({ onAddSingle, onAddBulk }: AddTopicPanelProps) {
+export function AddTopicPanel({
+  onAddSingle,
+  onAddBulk,
+  onAddPdfTopics,
+}: AddTopicPanelProps) {
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState<'single' | 'bulk' | 'pdf'>('single')
   const [singleName, setSingleName] = useState('')
   const [bulkText, setBulkText] = useState('')
   const [pdfFile, setPdfFile] = useState<File | null>(null)
   const [isExtracting, setIsExtracting] = useState(false)
+  const [stageStatuses, setStageStatuses] = useState(INITIAL_STAGE_STATUSES)
+  const [activeMessage, setActiveMessage] = useState<string | null>(null)
   const singleInputRef = useRef<HTMLInputElement>(null)
   const pdfInputRef = useRef<HTMLInputElement>(null)
 
@@ -43,6 +64,8 @@ export function AddTopicPanel({ onAddSingle, onAddBulk }: AddTopicPanelProps) {
     setSingleName('')
     setBulkText('')
     setPdfFile(null)
+    setStageStatuses(INITIAL_STAGE_STATUSES)
+    setActiveMessage(null)
   }
 
   const submitSingle = (event: FormEvent) => {
@@ -90,15 +113,31 @@ export function AddTopicPanel({ onAddSingle, onAddBulk }: AddTopicPanelProps) {
     event.preventDefault()
     if (!pdfFile || isExtracting) return
     setIsExtracting(true)
+    setStageStatuses(INITIAL_STAGE_STATUSES)
+    setActiveMessage(null)
     try {
-      const result = await extractTopicsFromPdf(pdfFile)
+      const result = await extractTopicsFromPdf(pdfFile, progress => {
+        setStageStatuses(prev => ({
+          ...prev,
+          [progress.stage]: progress.status === 'done' ? 'done' : 'active',
+        }))
+        setActiveMessage(progress.message ?? null)
+      })
       if (result.topics.length === 0) {
         toast.error('No topics found in that PDF')
         return
       }
-      onAddBulk(result.topics.join('\n'))
+      onAddPdfTopics(result.topics)
       closePanel()
     } catch (error) {
+      setStageStatuses(prev => {
+        const next = { ...prev }
+        const activeKey = (Object.keys(next) as PdfExtractionStage[]).find(
+          key => next[key] === 'active',
+        )
+        if (activeKey) next[activeKey] = 'error'
+        return next
+      })
       toast.error(
         error instanceof Error ? error.message : 'Failed to extract topics',
       )
@@ -217,17 +256,24 @@ export function AddTopicPanel({ onAddSingle, onAddBulk }: AddTopicPanelProps) {
                 />
                 <div
                   role="button"
-                  tabIndex={0}
-                  onClick={() => pdfInputRef.current?.click()}
+                  tabIndex={isExtracting ? -1 : 0}
+                  onClick={() => !isExtracting && pdfInputRef.current?.click()}
                   onKeyDown={event => {
-                    if (event.key === 'Enter' || event.key === ' ') {
+                    if (
+                      !isExtracting &&
+                      (event.key === 'Enter' || event.key === ' ')
+                    ) {
                       event.preventDefault()
                       pdfInputRef.current?.click()
                     }
                   }}
                   onDragOver={event => event.preventDefault()}
-                  onDrop={handlePdfDrop}
-                  className="flex cursor-pointer flex-col items-center gap-1.5 rounded-lg border border-dashed border-border bg-surface px-4 py-6 text-center transition-colors hover:border-primary hover:bg-primary-soft"
+                  onDrop={event => !isExtracting && handlePdfDrop(event)}
+                  className={`flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-border bg-surface px-4 py-6 text-center transition-colors ${
+                    isExtracting
+                      ? 'cursor-not-allowed opacity-60'
+                      : 'cursor-pointer hover:border-primary hover:bg-primary-soft'
+                  }`}
                 >
                   <FileText size={20} className="text-muted" />
                   {pdfFile ? (
@@ -245,6 +291,12 @@ export function AddTopicPanel({ onAddSingle, onAddBulk }: AddTopicPanelProps) {
                     </>
                   )}
                 </div>
+                {isExtracting && (
+                  <PdfExtractionProgress
+                    statuses={stageStatuses}
+                    activeMessage={activeMessage}
+                  />
+                )}
                 <div className="flex items-center gap-2">
                   <Button type="submit" disabled={!pdfFile || isExtracting}>
                     {isExtracting ? 'Extracting…' : 'Extract Topics'}

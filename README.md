@@ -30,8 +30,10 @@ along the way.
   skipping)
 - ✅ **Guest Mode** - Full product with no account required; data persists
   locally
-- 🚧 **PDF Topic Upload** - Frontend upload UI is wired up; extraction runs via
-  a backend endpoint that isn't implemented yet (planned as a Python service)
+- ✅ **PDF Topic Upload** - Upload a PDF and watch live progress (validating →
+  reading → AI analyzing → deduplicating → sorting into sections) as the
+  backend extracts topics and, when the document is already structured
+  (a syllabus, a roadmap), imports them straight into matching sections
 
 ### Philosophy
 
@@ -150,7 +152,7 @@ src/
 │   ├── landing/                    # Preparation composer, example preparations
 │   ├── preparations/               # Preparation dashboard, card, form, workspace
 │   ├── sections/                   # Section management, organization
-│   ├── topics/                     # Topic list, container, AI buttons, PDF upload
+│   ├── topics/                     # Topic list, container, AI buttons, PDF upload + live progress
 │   └── youtube/                    # YouTube in-topic search & player
 ├── lib/
 │   ├── storage/
@@ -160,7 +162,7 @@ src/
 │   ├── preparations/
 │   │   └── createPreparation.ts    # Builds a Preparation + Topics from raw input
 │   ├── api/
-│   │   └── pdfExtraction.ts        # Client for the (not-yet-built) PDF extraction endpoint
+│   │   └── pdfExtraction.ts        # Streams PDF extraction progress (SSE) from the backend
 │   └── id.ts                       # Guest-mode id generation
 ├── types/
 │   └── preparation.ts              # Preparation / Section / Topic data model
